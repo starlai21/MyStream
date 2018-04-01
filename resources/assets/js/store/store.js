@@ -1,0 +1,51 @@
+import Vuex from 'vuex';
+import Vue from 'vue';
+import * as types from './types';
+import router from '../routes';
+
+
+Vue.use(Vuex);
+export default new Vuex.Store({
+    state: {
+        user: {},
+        token: null,
+        title: ''
+    },
+    mutations: {
+        [types.LOGIN]: (state, data) => {
+            localStorage.token = data;
+            state.token = data;
+        },
+        [types.LOGOUT]: (state) => {
+            localStorage.removeItem('token');
+            state.token = null
+        },
+        [types.TITLE]: (state, data) => {
+            state.title = data;
+        }
+    },
+    actions: {
+        logout({commit}){
+            return new Promise((resolve,reject) => {
+                axios.post('/api/auth/logout')
+                        .then(response => {
+                            commit(types.LOGOUT);
+                        })
+                        .catch(r => {
+                            console.log(r);
+                            commit(types.LOGOUT);
+                        });
+                        router.push({name:'login'});
+                        
+            })
+        },
+
+        logined({commit},token){
+            return new Promise((resolve,reject) => {
+                commit(types.LOGIN,token);
+                // axios.defaults.headers.common['Authorization'] = token;
+                router.push({name:'admin'});
+            })
+        }
+    }
+})
