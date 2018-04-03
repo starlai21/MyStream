@@ -1,10 +1,12 @@
 <template>
 <div>
-	<div class="has-text-centered" v-if="isLoading">
-	  <span class="icon">
-	    <i class="fa fa-refresh fa-spin fa-3x fa-fw" style="color:#00d1b2"></i>
-	  </span>
-	</div>
+	<fingerprint-spinner v-if="isLoading"
+		  :animation-duration="1500"
+		  :size="64"
+		  color="#00d1b2"
+		  style="position: fixed;top: 50%;left: 50%;
+  transform: translate(-50%, -50%);"
+		/>
 	<div class="columns">
 		<div class="column">
 			<span class="icon"  @click="$router.go(-1)">

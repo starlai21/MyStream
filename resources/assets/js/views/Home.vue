@@ -2,12 +2,13 @@
 
 <div>
 
-  <div  v-if="isLoading" style="  position: fixed;top: 50%;left: 50%;
-  transform: translate(-50%, -50%);">
-    <span class="icon">
-      <i class="fa fa-refresh fa-spin fa-3x fa-fw" style="color:#00d1b2"></i>
-    </span>
-  </div>
+    <fingerprint-spinner v-if="isLoading"
+      :animation-duration="1500"
+      :size="64"
+      color="#00d1b2"
+      style="position: fixed;top: 50%;left: 50%;
+  transform: translate(-50%, -50%);"
+    />
 
 
 
@@ -58,88 +59,16 @@
 
 <script>
 
-import Post from '../models/Post.js';
+
 import PostReview from './components/PostReview';
-import Archive from './components/Archive';
-import Tag from './components/Tag';
-import Pagination from './components/Pagination';
-
-    export default {
-
-        data(){
-            return{
-                isLoading:false,
-                posts:[],
-                tags:[],
-                pagination:{},
-                params:{},
-                activeTag:"",
-                activeDate:{}
-            };
-        },
-        created(){
-            this.isLoading = true;
-
-            Post.all(data => {
-              this.posts = data.data;
-              this.setPagination(data);
-              this.isLoading = false;
-            },error => {
-              this.isLoading = false;
-              console.log(error);
-            });
-            
-            Post.tags(data => this.tags = data);
-        },
-        methods:{
-          setPagination(data){
-            let pagination = {
-                    current_page: data.current_page,
-                    last_page: data.last_page,
-                    next_page_url: data.next_page_url,
-                    prev_page_url: data.prev_page_url,
-                    path:data.path
-                };
-            this.pagination = pagination;
-          },
-          fetchPosts(pageUrl){
-            this.isLoading = true;
-            Post.all(data => {
-              this.posts = data.data;
-              this.setPagination(data);
-              this.isLoading = false;
-            },error => {
-              this.isLoading = false;
-              console.log(error);
-            },
-            pageUrl,this.params);
-            this.params = {};
-          },
-          setDate(date){
-            this.params['month'] = date.month;
-            this.params['year'] = date.year;
-            this.params['tag'] = this.activeTag;
-            this.activeDate = date;
-            this.fetchPosts();
-          },
-          setTag(tag){
-            this.params['tag'] = tag;
-            this.params['month'] = this.activeDate['month'];
-            this.params['year'] = this.activeDate['year'];
-            this.activeTag = tag;
-            this.fetchPosts();
-          }
-
-  
-        },
-        components:{
-          'post-review':PostReview,
-          'archive': Archive,
-          'tags': Tag,
-          'pagination': Pagination
-        }
+import PostsMixin from '../mixins/PostsMixin.js';
 
 
-    }
+  export default {
+    mixins: [PostsMixin],
+    components:{
+        'post-review':PostReview
+      }
+  }
     
 </script>

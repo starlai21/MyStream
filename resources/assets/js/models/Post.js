@@ -3,7 +3,14 @@ export default class Post{
 		pageUrl = pageUrl || '/api/posts';
 		axios.get(pageUrl,{params:params})
                  .then(({data}) => then(data))
-                 .catch(error => _catch(error));
+                 .catch(error => {
+                 	_catch(error);
+                 	Swal({
+		                type: 'error',
+		                title: 'Oops...',
+		                text: 'Failed to fetch posts.'
+		              });
+                 });
 	}
 
 	static archives(then){
@@ -21,6 +28,13 @@ export default class Post{
 	static fetchPost(then,_catch,postId){
 		axios.get('/api/posts/'+postId)
 				.then(({data}) => then(data))
-				.catch(error => _catch(error));
+				.catch(error => {
+					_catch(error);
+					Swal({
+		                type: 'error',
+		                title: 'Oops...',
+		                text: 'Failed to fetch the post.'
+		              });
+				});
 	}
 }

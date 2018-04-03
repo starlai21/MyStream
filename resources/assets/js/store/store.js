@@ -35,6 +35,10 @@ export default new Vuex.Store({
                             console.log(r);
                             commit(types.LOGOUT);
                         });
+                Swal({
+                      type: 'success',
+                      title: 'Bye~'
+                    });
                         router.push({name:'login'});
                         
             })
@@ -43,7 +47,10 @@ export default new Vuex.Store({
         logined({commit},token){
             return new Promise((resolve,reject) => {
                 commit(types.LOGIN,token);
-                // axios.defaults.headers.common['Authorization'] = token;
+                Swal({
+                      type: 'success',
+                      title: 'Welcome back!'
+                    });
                 router.push({name:'admin'});
             })
         }

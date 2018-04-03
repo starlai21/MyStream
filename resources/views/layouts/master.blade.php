@@ -15,10 +15,10 @@
 
             .body {
               min-height: calc(100vh - 70px);
-              padding: 40px 40px 0 40px;
+              padding: 40px 40px 0 20px;
             }
             .footer {
-              height: 60px;
+              height: 20px;
             }
 
 
@@ -28,7 +28,6 @@
     <body>
         
         @yield('body')
-        
         <script src="/js/app.js"></script>
     </body>
 </html>

@@ -32,7 +32,10 @@
 				  </ul>
 				</aside>
 			</div>
-			<router-view></router-view>
+			<div class="column auto">
+				<router-view></router-view>	
+			</div>
+			
 		</div>
 	</div>
 </template>

@@ -5,6 +5,12 @@ import hljs from 'highlight.js';
 import 'highlight.js/styles/solarized-light.css';
 import marked from 'marked';
 
+// ES6 Modules or TypeScript
+import Swal from 'sweetalert2';
+
+// CommonJS
+window.Swal = require('sweetalert2');
+
 
 
 window.marked = marked;

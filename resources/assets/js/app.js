@@ -1,9 +1,9 @@
 import './bootstrap';
-
+// import bulmaTagsInput from '/node_modules/bulma-extensions/bulma-tagsinput/dist/bulma-tagsinput.min.js';
 import router from './routes';
 import store from './store/store';
 import {mapState} from 'vuex';
-
+import { FingerprintSpinner } from 'epic-spinners';
 
 //axios configuration.
 
@@ -49,6 +49,10 @@ window.axios.interceptors.response.use(
             return Promise.reject(error)
         })
 
+
+
+
+Vue.component('fingerprint-spinner',FingerprintSpinner);
 
 new Vue({
     el: '#app',
