@@ -14562,23 +14562,3 @@ label.panel-block:hover {
   padding: 3rem 1.5rem 6rem;
 }
 
-.tagsinput {
-  height: auto !important;
-}
-
-.tagsinput .control {
-  margin-bottom: .1em !important;
-  margin-top: .1em !important;
-}
-
-.tagsinput input {
-  border: none;
-  margin-bottom: .1em !important;
-  margin-top: .1em !important;
-}
-
-.tagsinput .tag.is-active {
-  background-color: #00d1b2;
-  color: #fff;
-}
-

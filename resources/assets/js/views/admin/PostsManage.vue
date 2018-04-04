@@ -29,7 +29,7 @@
 					  			<a class="button is-primary">
 					  				<router-link :to="{name:'post_edit',params:{postId:post.id}}">Edit</router-link>
 					  			</a>
-								<a class="button is-danger">Delete</a>
+								<a class="button is-danger" @click="deletePost(post.id)">Delete</a>
 							</th>
 					  	</tr>
 					  </tbody>
@@ -59,7 +59,7 @@
 			</div>
 			 
 		</div>
-		<pagination @go="fetchPosts" :pagination="pagination" v-if="!isLoading"></pagination>
+		<pagination @go="fetchPosts" :pagination="pagination" v-show="!isLoading"></pagination>
 
 	</div>
 </template>
@@ -74,6 +74,39 @@ import moment from 'moment';
 			postOn(created_at){
                 return moment(created_at).format("MM-DD,YYYY");
             }
+		},
+		methods:{
+			deletePost(postId){
+				Swal({
+					  title: 'Are you sure?',
+					  text: "You won't be able to revert this!",
+					  type: 'warning',
+					  showCancelButton: true,
+					  confirmButtonColor: '#3085d6',
+					  cancelButtonColor: '#d33',
+					  confirmButtonText: 'Yes, delete it!'
+					}).then((result) => {
+					  if (result.value) {
+					  	axios.post(`/api/post/${postId}/delete`)
+								.then(r => {
+									Swal({
+										  type:'success',
+					                      title: 'Post deleted!'
+					                });
+					                $router.push({name:'posts_manage'});
+								})
+								.catch(e => {
+									console.log(e);
+									Swal({
+										  type:'error',
+					                      title: 'Failed to delete the post.'
+					                });
+								});
+					  }
+					});
+
+
+			}
 		}
 	}
 </script>

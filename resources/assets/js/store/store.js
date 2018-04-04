@@ -22,6 +22,10 @@ export default new Vuex.Store({
         },
         [types.TITLE]: (state, data) => {
             state.title = data;
+        },
+        [types.REFRESH_TOKEN]: (state, data) => {
+            localStorage.token = data;
+            state.token = data;
         }
     },
     actions: {
@@ -36,7 +40,6 @@ export default new Vuex.Store({
                             commit(types.LOGOUT);
                         });
                 Swal({
-                      type: 'success',
                       title: 'Bye~'
                     });
                         router.push({name:'login'});
@@ -48,11 +51,13 @@ export default new Vuex.Store({
             return new Promise((resolve,reject) => {
                 commit(types.LOGIN,token);
                 Swal({
-                      type: 'success',
                       title: 'Welcome back!'
                     });
                 router.push({name:'admin'});
             })
+        },
+        refreshToken({commit},token){
+            commit(types.REFRESH_TOKEN,token);
         }
     }
 })

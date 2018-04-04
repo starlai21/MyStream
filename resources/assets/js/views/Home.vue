@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <pagination @go="fetchPosts" :pagination="pagination"></pagination>
+    <pagination @go="fetchPosts" :pagination="pagination" v-show="!isLoading"></pagination>
   </div>
 
 </template>
