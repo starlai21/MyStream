@@ -31,8 +31,9 @@ Route::prefix('auth')->group(function($router) {
 
 });
 
-Route::middleware('refresh.token')->group(function($router) {
+Route::middleware(['refresh.token'])->group(function($router) {
    	 // $router->get('profile',function(){return 'done';});
     $router->post('post/{post}/edit','PostController@update');
     $router->post('post/{post}/delete','PostController@delete');
+    $router->post('post/create','PostController@store');
 });

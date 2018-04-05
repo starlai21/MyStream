@@ -5,13 +5,12 @@ namespace App\Http\Controllers;
 use App\Post;
 use App\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
     //
-    public function store(){
 
-    }
 
     public function index($postId = null){
         sleep(1);
@@ -40,7 +39,11 @@ class PostController extends Controller
 
     public function store(Request $request){
         $params = $request->validate(['title' => 'required','abstract'=>'nullable','content'=>'required']);
+
         $tagNames = $request->validate(['tags' => 'nullable']);
+        if (!Auth::user())
+            return ;
+        $params['user_id'] = Auth::user()->id;
         $post = Post::create($params);
         foreach ($tagNames['tags'] as $tagName){
             $tag = Tag::firstOrCreate(['name' => $tagName]);

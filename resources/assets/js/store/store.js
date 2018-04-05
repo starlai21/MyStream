@@ -17,6 +17,10 @@ export default new Vuex.Store({
             state.token = data;
         },
         [types.LOGOUT]: (state) => {
+            Swal({
+                    title: 'Bye~'
+                    });
+            router.push({name:'login'});
             localStorage.removeItem('token');
             state.token = null
         },
@@ -39,10 +43,6 @@ export default new Vuex.Store({
                             console.log(r);
                             commit(types.LOGOUT);
                         });
-                Swal({
-                      title: 'Bye~'
-                    });
-                        router.push({name:'login'});
                         
             })
         },

@@ -46,7 +46,12 @@ let routes = [
     			path:'posts/manage',
     			name:'posts_manage',
     			component:require('./views/admin/PostsManage.vue') 
-    		}
+    		},
+            {
+                path:'post/create',
+                name:'post_create',
+                component:require('./views/admin/PostCreate.vue') 
+            }
 
     	]
 

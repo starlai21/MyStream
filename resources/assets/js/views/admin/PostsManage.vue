@@ -39,6 +39,11 @@
 
 				<div class="column auto">
 					<div class="tile is-parent is-vertical">
+						<div class="tile is-child">
+							<button class="button is-success" @click="$router.push({name:'post_create'})">
+								Create A New Post
+							</button>
+						</div>
 						<div class="tile is-child box">
 							<span class="icon" @click="setDate({year:'',month:''})">
 				              <i class="fa fa-calendar" style="font-size:20px;color:blue"></i>
