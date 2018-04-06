@@ -15,7 +15,18 @@ class PostController extends Controller
     public function index($postId = null){
         sleep(1);
     	if ($postId != null){
-    		return Post::with('tags:name')->find($postId);
+            // try{
+            //     $post = Post::with('tags:name')->findOrFail($postId);
+            //     return $post;
+            // }
+            // catch(ModelNotFoundException $e){
+            //     return response()
+            //         ->json(['status' => 'error',
+            //                 'message' => 'The post does not exist.']);
+            // }
+            $post = Post::with('tags:name')->findOrFail($postId);
+            return $post;
+    		
     	}
     	else{
             $posts = Post::latest();
@@ -42,7 +53,10 @@ class PostController extends Controller
 
         $tagNames = $request->validate(['tags' => 'nullable']);
         if (!Auth::user())
-            return ;
+            return response()
+                    ->json(['status' => 'error',
+                            'message' => 'Please try again.']);
+
         $params['user_id'] = Auth::user()->id;
         $post = Post::create($params);
         foreach ($tagNames['tags'] as $tagName){

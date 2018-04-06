@@ -71,11 +71,16 @@ import Post from '../../models/Post.js';
 				axios.post('/api/post/create',params)
 						.then(r => {
 							//console.log(r);
-							this.clear();
-							Swal({
-								  type:'success',
-			                      title: 'Post updated!'
-			                });
+							if (r.data.status == "error"){
+								Post();
+							}
+							else{
+								this.clear();
+								Swal({
+									  type:'success',
+				                      title: 'Post updated!'
+				                });
+							}
 						})
 						.catch(e => {
 							console.log(e);
@@ -89,7 +94,7 @@ import Post from '../../models/Post.js';
 			clear(){
 				this.title = '';
 				this.abstract = '';
-				this.tag = [];
+				this.tags = [];
 				this.content = '';
 			}
 		}

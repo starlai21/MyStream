@@ -8,6 +8,12 @@ import marked from 'marked';
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2';
 
+import Toasted from 'vue-toasted';
+
+
+
+
+
 // CommonJS
 window.Swal = require('sweetalert2');
 
@@ -18,6 +24,7 @@ window.marked = marked;
 
 
 window.Vue = Vue;
+Vue.use(Toasted);
 Vue.use(VueRouter);
 
 Vue.directive('highlight',(el)=>{

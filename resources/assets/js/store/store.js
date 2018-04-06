@@ -17,9 +17,11 @@ export default new Vuex.Store({
             state.token = data;
         },
         [types.LOGOUT]: (state) => {
-            Swal({
-                    title: 'Bye~'
-                    });
+            Vue.toasted.show("Bye~", { 
+                     theme: "primary", 
+                     position: "bottom-center", 
+                     duration : 3000
+                });
             router.push({name:'login'});
             localStorage.removeItem('token');
             state.token = null
@@ -50,9 +52,11 @@ export default new Vuex.Store({
         logined({commit},token){
             return new Promise((resolve,reject) => {
                 commit(types.LOGIN,token);
-                Swal({
-                      title: 'Welcome back!'
-                    });
+                Vue.toasted.show("Welcome back~", { 
+                     theme: "primary", 
+                     position: "bottom-center", 
+                     duration : 3000
+                });
                 router.push({name:'admin'});
             })
         },

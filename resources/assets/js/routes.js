@@ -6,6 +6,7 @@ import * as types from './store/types';
 let routes = [
 	{
 		path:'/',
+        name:'home',
 		component: require('./views/Home.vue'),
 		meta: {
       		keepAlive: true 

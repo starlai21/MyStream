@@ -98,7 +98,8 @@ import moment from 'moment';
 										  type:'success',
 					                      title: 'Post deleted!'
 					                });
-					                $router.push({name:'posts_manage'});
+					                this.posts = this.posts
+									  				.filter(e => e.id != postId);
 								})
 								.catch(e => {
 									console.log(e);

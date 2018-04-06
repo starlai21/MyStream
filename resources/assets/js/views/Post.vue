@@ -72,6 +72,7 @@ import moment from 'moment';
 			},error => {
               this.isLoading = false;
               console.log(error);
+              this.$router.push({name:'home'});
             },this.postId);
 
 		},
