@@ -17,11 +17,6 @@ export default new Vuex.Store({
             state.token = data;
         },
         [types.LOGOUT]: (state) => {
-            Vue.toasted.show("Bye~", { 
-                     theme: "primary", 
-                     position: "bottom-center", 
-                     duration : 3000
-                });
             router.push({name:'login'});
             localStorage.removeItem('token');
             state.token = null
@@ -37,6 +32,11 @@ export default new Vuex.Store({
     actions: {
         logout({commit}){
             return new Promise((resolve,reject) => {
+                Vue.toasted.show("Bye~", { 
+                     theme: "primary", 
+                     position: "bottom-center", 
+                     duration : 3000
+                });
                 axios.post('/api/auth/logout')
                         .then(response => {
                             commit(types.LOGOUT);

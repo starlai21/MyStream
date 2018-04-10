@@ -1,5 +1,4 @@
 import './bootstrap';
-// import bulmaTagsInput from '/node_modules/bulma-extensions/bulma-tagsinput/dist/bulma-tagsinput.min.js';
 import router from './routes';
 import store from './store/store';
 import {mapState} from 'vuex';
