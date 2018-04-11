@@ -1,16 +1,17 @@
 <template>
 	<div>
-			<span class="icon"  @click="$router.go(-1)">
+<!-- 			<span class="icon"  @click="$router.go(-1)">
 				<i class="fa fa-angle-double-left fa-3x"></i>
-			</span>
+			</span> -->
 
 		<div class="columns">
   			<div class="column is-three-fifths is-offset-one-fifth">
   				<div class="field">
 				  <label class="label">Title</label>
 				  <div class="control">
-				    <input class="input" type="text" v-model="title">
+				    <input class="input" type="text" v-model="title" @input="clearError('title')">
 				  </div>
+				  <p class="help is-danger" v-if="errors.title">{{errors.title[0]}}</p>
 				</div>
 
 				<div class="field">
@@ -30,8 +31,9 @@
 				<div class="field">
 				  <label class="label">Content</label>
 				  <div class="control">
-				    <textarea class="textarea" v-model="content"></textarea>
+				    <textarea class="textarea" v-model="content" @input="clearError('content')"></textarea>
 				  </div>
+				  <p class="help is-danger" v-if="errors.content">{{errors.content[0]}}</p>
 				</div>
 				<div class="field">
 					<button class="button is-primary" @click="Post">Post</button>
@@ -51,7 +53,8 @@ import Post from '../../models/Post.js';
 				title: '',
 				abstract: '',
 				tags: [],
-				content: ''
+				content: '',
+				errors:[]
 			};
 		},
 		created(){
@@ -75,6 +78,7 @@ import Post from '../../models/Post.js';
 								Post();
 							}
 							else{
+								this.$emit("posted");
 								this.clear();
 								Swal({
 									  type:'success',
@@ -88,6 +92,7 @@ import Post from '../../models/Post.js';
 								  type:'error',
 			                      title: 'Failed to update.'
 			                });
+			                this.errors = e.response.data.errors; 
 						});
 
 			},
@@ -96,6 +101,11 @@ import Post from '../../models/Post.js';
 				this.abstract = '';
 				this.tags = [];
 				this.content = '';
+				this.errors = [];
+			},
+			clearError(prop){
+				if(this.errors.hasOwnProperty(prop))
+					this.errors[prop] = null;
 			}
 		}
 

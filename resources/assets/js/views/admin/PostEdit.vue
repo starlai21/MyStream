@@ -1,16 +1,7 @@
 <template>
 	<div>
-			<span class="icon"  @click="$router.go(-1)">
-				<i class="fa fa-angle-double-left fa-3x"></i>
-			</span>
-		<fingerprint-spinner v-if="isLoading"
-		  :animation-duration="1500"
-		  :size="64"
-		  color="#00d1b2"
-		  style="position: fixed;top: 50%;left: 50%;
-  transform: translate(-50%, -50%);"
-		/>
-		<div class="columns" v-else>
+
+		<div class="columns">
   			<div class="column is-three-fifths is-offset-one-fifth">
   				<div class="field">
 				  <label class="label">Title</label>
@@ -52,28 +43,27 @@ import InputTag from 'vue-input-tag';
 import Post from '../../models/Post.js';
 
 	export default{
+		props:['post'],
 		data(){
 			return {
 				title: '',
 				abstract: '',
 				tags: [],
 				content: '',
-				isLoading: false,
-				postId:this.$route.params.postId
+				postId: null
 			};
 		},
+		watch:{
+			post(n,o){
+				this.title = n.title;
+				this.abstract = n.abstract;
+				this.tags = n.tags.map(i => i.name);
+				this.content = n.content;
+				this.postId = n.id;
+			}
+		},
 		created(){
-			this.isLoading = true;
-			Post.fetchPost(data => {
-				this.isLoading = false;
-				this.title = data.title;
-				this.abstract = data.abstract;
-				this.tags = data.tags.map( o => o.name);
-				this.content = data.content;
-			},error => {
-              this.isLoading = false;
-              console.log(error);
-            },this.postId);
+
 		},
 		components:{
 			InputTag
@@ -89,6 +79,7 @@ import Post from '../../models/Post.js';
 				axios.post(`/api/post/${this.postId}/edit`,params)
 						.then(r => {
 							//console.log(r);
+							this.$emit('updated');
 							Swal({
 								  type:'success',
 			                      title: 'Post updated!'

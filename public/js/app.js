@@ -22987,17 +22987,9 @@ var routes = [{
         requireAuth: true
     },
     children: [{
-        path: 'post/:postId/edit',
-        name: 'post_edit',
-        component: __webpack_require__(203)
-    }, {
         path: 'posts/manage',
         name: 'posts_manage',
         component: __webpack_require__(206)
-    }, {
-        path: 'post/create',
-        name: 'post_create',
-        component: __webpack_require__(209)
     }]
 
 }, {
@@ -70451,53 +70443,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+	props: ['post'],
 	data: function data() {
 		return {
 			title: '',
 			abstract: '',
 			tags: [],
 			content: '',
-			isLoading: false,
-			postId: this.$route.params.postId
+			postId: null
 		};
 	},
-	created: function created() {
-		var _this = this;
 
-		this.isLoading = true;
-		__WEBPACK_IMPORTED_MODULE_1__models_Post_js__["a" /* default */].fetchPost(function (data) {
-			_this.isLoading = false;
-			_this.title = data.title;
-			_this.abstract = data.abstract;
-			_this.tags = data.tags.map(function (o) {
-				return o.name;
+	watch: {
+		post: function post(n, o) {
+			this.title = n.title;
+			this.abstract = n.abstract;
+			this.tags = n.tags.map(function (i) {
+				return i.name;
 			});
-			_this.content = data.content;
-		}, function (error) {
-			_this.isLoading = false;
-			console.log(error);
-		}, this.postId);
+			this.content = n.content;
+			this.postId = n.id;
+		}
 	},
+	created: function created() {},
 
 	components: {
 		InputTag: __WEBPACK_IMPORTED_MODULE_0_vue_input_tag___default.a
 	},
 	methods: {
 		Update: function Update() {
+			var _this = this;
+
 			var params = {
 				title: this.title,
 				abstract: this.abstract,
@@ -70506,6 +70487,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			};
 			axios.post('/api/post/' + this.postId + '/edit', params).then(function (r) {
 				//console.log(r);
+				_this.$emit('updated');
 				Swal({
 					type: 'success',
 					title: 'Post updated!'
@@ -70530,155 +70512,121 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c(
-        "span",
-        {
-          staticClass: "icon",
-          on: {
-            click: function($event) {
-              _vm.$router.go(-1)
-            }
-          }
-        },
-        [_c("i", { staticClass: "fa fa-angle-double-left fa-3x" })]
-      ),
-      _vm._v(" "),
-      _vm.isLoading
-        ? _c("fingerprint-spinner", {
-            staticStyle: {
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)"
-            },
-            attrs: { "animation-duration": 1500, size: 64, color: "#00d1b2" }
-          })
-        : _c("div", { staticClass: "columns" }, [
-            _c(
-              "div",
-              { staticClass: "column is-three-fifths is-offset-one-fifth" },
-              [
-                _c("div", { staticClass: "field" }, [
-                  _c("label", { staticClass: "label" }, [_vm._v("Title")]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "control" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.title,
-                          expression: "title"
-                        }
-                      ],
-                      staticClass: "input",
-                      attrs: { type: "text" },
-                      domProps: { value: _vm.title },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.title = $event.target.value
-                        }
-                      }
-                    })
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "field" }, [
-                  _c("label", { staticClass: "label" }, [_vm._v("Tags")]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "control" },
-                    [
-                      _c("input-tag", {
-                        attrs: { tags: _vm.tags },
-                        on: {
-                          "update:tags": function($event) {
-                            _vm.tags = $event
-                          }
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "field" }, [
-                  _c("label", { staticClass: "label" }, [_vm._v("Abstract")]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "control" }, [
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.abstract,
-                          expression: "abstract"
-                        }
-                      ],
-                      staticClass: "textarea",
-                      domProps: { value: _vm.abstract },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.abstract = $event.target.value
-                        }
-                      }
-                    })
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "field" }, [
-                  _c("label", { staticClass: "label" }, [_vm._v("Content")]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "control" }, [
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.content,
-                          expression: "content"
-                        }
-                      ],
-                      staticClass: "textarea",
-                      domProps: { value: _vm.content },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.content = $event.target.value
-                        }
-                      }
-                    })
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "field" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "button is-primary",
-                      on: { click: _vm.Update }
-                    },
-                    [_vm._v("Update")]
-                  )
-                ])
-              ]
-            )
+  return _c("div", [
+    _c("div", { staticClass: "columns" }, [
+      _c("div", { staticClass: "column is-three-fifths is-offset-one-fifth" }, [
+        _c("div", { staticClass: "field" }, [
+          _c("label", { staticClass: "label" }, [_vm._v("Title")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "control" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.title,
+                  expression: "title"
+                }
+              ],
+              staticClass: "input",
+              attrs: { type: "text" },
+              domProps: { value: _vm.title },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.title = $event.target.value
+                }
+              }
+            })
           ])
-    ],
-    1
-  )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "field" }, [
+          _c("label", { staticClass: "label" }, [_vm._v("Tags")]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "control" },
+            [
+              _c("input-tag", {
+                attrs: { tags: _vm.tags },
+                on: {
+                  "update:tags": function($event) {
+                    _vm.tags = $event
+                  }
+                }
+              })
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "field" }, [
+          _c("label", { staticClass: "label" }, [_vm._v("Abstract")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "control" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.abstract,
+                  expression: "abstract"
+                }
+              ],
+              staticClass: "textarea",
+              domProps: { value: _vm.abstract },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.abstract = $event.target.value
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "field" }, [
+          _c("label", { staticClass: "label" }, [_vm._v("Content")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "control" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.content,
+                  expression: "content"
+                }
+              ],
+              staticClass: "textarea",
+              domProps: { value: _vm.content },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.content = $event.target.value
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "field" }, [
+          _c(
+            "button",
+            { staticClass: "button is-primary", on: { click: _vm.Update } },
+            [_vm._v("Update")]
+          )
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -70744,8 +70692,12 @@ module.exports = Component.exports
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_PostsMixin_js__ = __webpack_require__(146);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__PostCreate__ = __webpack_require__(209);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__PostCreate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__PostCreate__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__PostEdit__ = __webpack_require__(203);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__PostEdit___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__PostEdit__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_moment__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_moment__);
 //
 //
 //
@@ -70817,15 +70769,51 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+	data: function data() {
+		return {
+			isCreateActive: false,
+			isEditActive: false,
+			postEdited: null
+		};
+	},
+
+	components: {
+		PostCreate: __WEBPACK_IMPORTED_MODULE_1__PostCreate___default.a,
+		PostEdit: __WEBPACK_IMPORTED_MODULE_2__PostEdit___default.a
+	},
+
 	mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_PostsMixin_js__["a" /* default */]],
 	filters: {
 		postOn: function postOn(created_at) {
-			return __WEBPACK_IMPORTED_MODULE_1_moment___default()(created_at).format("MM-DD,YYYY");
+			return __WEBPACK_IMPORTED_MODULE_3_moment___default()(created_at).format("MM-DD,YYYY");
 		}
 	},
 	methods: {
@@ -70859,6 +70847,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					});
 				}
 			});
+		},
+		activateEdit: function activateEdit(post) {
+			this.postEdited = post;
+			this.isEditActive = !this.isEditActive;
 		}
 	}
 });
@@ -70874,6 +70866,77 @@ var render = function() {
   return _c(
     "div",
     [
+      _c(
+        "div",
+        { staticClass: "modal", class: { "is-active": _vm.isCreateActive } },
+        [
+          _c("div", { staticClass: "modal-background" }),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-card" }, [
+            _c(
+              "div",
+              { staticClass: "box" },
+              [
+                _c("post-create", {
+                  on: {
+                    posted: function($event) {
+                      _vm.isCreateActive = !_vm.isCreateActive
+                    }
+                  }
+                })
+              ],
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _c("button", {
+            staticClass: "modal-close is-large",
+            attrs: { "aria-label": "close" },
+            on: {
+              click: function($event) {
+                _vm.isCreateActive = !_vm.isCreateActive
+              }
+            }
+          })
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "modal", class: { "is-active": _vm.isEditActive } },
+        [
+          _c("div", { staticClass: "modal-background" }),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-card" }, [
+            _c(
+              "div",
+              { staticClass: "box" },
+              [
+                _c("post-edit", {
+                  attrs: { post: _vm.postEdited },
+                  on: {
+                    updated: function($event) {
+                      _vm.isEditActive = !_vm.isEditActive
+                    }
+                  }
+                })
+              ],
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _c("button", {
+            staticClass: "modal-close is-large",
+            attrs: { "aria-label": "close" },
+            on: {
+              click: function($event) {
+                _vm.isEditActive = !_vm.isEditActive
+              }
+            }
+          })
+        ]
+      ),
+      _vm._v(" "),
       _vm.isLoading
         ? _c("fingerprint-spinner", {
             staticStyle: {
@@ -70910,27 +70973,24 @@ var render = function() {
                         _vm._v(" "),
                         _c("th", [
                           _c(
-                            "a",
-                            { staticClass: "button is-primary" },
+                            "button",
+                            {
+                              staticClass: "button is-primary",
+                              on: {
+                                click: function($event) {
+                                  _vm.activateEdit(post)
+                                }
+                              }
+                            },
                             [
-                              _c(
-                                "router-link",
-                                {
-                                  attrs: {
-                                    to: {
-                                      name: "post_edit",
-                                      params: { postId: post.id }
-                                    }
-                                  }
-                                },
-                                [_vm._v("Edit")]
+                              _vm._v(
+                                "\n\t\t\t\t\t  \t\t\t\tEdit\n\t\t\t\t\t  \t\t\t"
                               )
-                            ],
-                            1
+                            ]
                           ),
                           _vm._v(" "),
                           _c(
-                            "a",
+                            "button",
                             {
                               staticClass: "button is-danger",
                               on: {
@@ -70957,15 +71017,11 @@ var render = function() {
                         staticClass: "button is-success",
                         on: {
                           click: function($event) {
-                            _vm.$router.push({ name: "post_create" })
+                            _vm.isCreateActive = !_vm.isCreateActive
                           }
                         }
                       },
-                      [
-                        _vm._v(
-                          "\n\t\t\t\t\t\t\t\tCreate A New Post\n\t\t\t\t\t\t\t"
-                        )
-                      ]
+                      [_vm._v("Create New Post")]
                     )
                   ]),
                   _vm._v(" "),
@@ -71158,6 +71214,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -71168,7 +71226,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			title: '',
 			abstract: '',
 			tags: [],
-			content: ''
+			content: '',
+			errors: []
 		};
 	},
 	created: function created() {},
@@ -71191,6 +71250,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				if (r.data.status == "error") {
 					Object(__WEBPACK_IMPORTED_MODULE_1__models_Post_js__["a" /* default */])();
 				} else {
+					_this.$emit("posted");
 					_this.clear();
 					Swal({
 						type: 'success',
@@ -71203,6 +71263,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					type: 'error',
 					title: 'Failed to update.'
 				});
+				_this.errors = e.response.data.errors;
 			});
 		},
 		clear: function clear() {
@@ -71210,6 +71271,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.abstract = '';
 			this.tags = [];
 			this.content = '';
+			this.errors = [];
+		},
+		clearError: function clearError(prop) {
+			if (this.errors.hasOwnProperty(prop)) this.errors[prop] = null;
 		}
 	}
 
@@ -71224,19 +71289,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "span",
-      {
-        staticClass: "icon",
-        on: {
-          click: function($event) {
-            _vm.$router.go(-1)
-          }
-        }
-      },
-      [_c("i", { staticClass: "fa fa-angle-double-left fa-3x" })]
-    ),
-    _vm._v(" "),
     _c("div", { staticClass: "columns" }, [
       _c("div", { staticClass: "column is-three-fifths is-offset-one-fifth" }, [
         _c("div", { staticClass: "field" }, [
@@ -71256,15 +71308,26 @@ var render = function() {
               attrs: { type: "text" },
               domProps: { value: _vm.title },
               on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+                input: [
+                  function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.title = $event.target.value
+                  },
+                  function($event) {
+                    _vm.clearError("title")
                   }
-                  _vm.title = $event.target.value
-                }
+                ]
               }
             })
-          ])
+          ]),
+          _vm._v(" "),
+          _vm.errors.title
+            ? _c("p", { staticClass: "help is-danger" }, [
+                _vm._v(_vm._s(_vm.errors.title[0]))
+              ])
+            : _vm._e()
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "field" }, [
@@ -71330,15 +71393,26 @@ var render = function() {
               staticClass: "textarea",
               domProps: { value: _vm.content },
               on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+                input: [
+                  function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.content = $event.target.value
+                  },
+                  function($event) {
+                    _vm.clearError("content")
                   }
-                  _vm.content = $event.target.value
-                }
+                ]
               }
             })
-          ])
+          ]),
+          _vm._v(" "),
+          _vm.errors.content
+            ? _c("p", { staticClass: "help is-danger" }, [
+                _vm._v(_vm._s(_vm.errors.content[0]))
+              ])
+            : _vm._e()
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "field" }, [

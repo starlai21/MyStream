@@ -1,6 +1,29 @@
 <template>
 
 	<div >
+		<!-- modal create post begin -->
+		<div class="modal" :class="{'is-active':isCreateActive}">
+		  <div class="modal-background"></div>
+		  <div class="modal-card">
+		    <div class="box">
+		    	<post-create @posted="isCreateActive = !isCreateActive"></post-create>
+			</div>
+		  </div>
+		  <button class="modal-close is-large" aria-label="close"  @click="isCreateActive = !isCreateActive"></button>
+		</div>
+		<!-- modal end -->
+
+		<!-- modal create post begin -->
+		<div class="modal" :class="{'is-active':isEditActive}">
+		  <div class="modal-background"></div>
+		  <div class="modal-card">
+		    <div class="box">
+		    	<post-edit :post="postEdited" @updated="isEditActive = !isEditActive"></post-edit>
+			</div>
+		  </div>
+		  <button class="modal-close is-large" aria-label="close"  @click="isEditActive = !isEditActive"></button>
+		</div>
+		<!-- modal end -->
 		<fingerprint-spinner v-if="isLoading"
 		  :animation-duration="1500"
 		  :size="64"
@@ -26,10 +49,10 @@
 					  		<th>{{post.title}}</th>
 					  		<th>{{post.created_at|postOn}}</th>
 					  		<th>
-					  			<a class="button is-primary">
-					  				<router-link :to="{name:'post_edit',params:{postId:post.id}}">Edit</router-link>
-					  			</a>
-								<a class="button is-danger" @click="deletePost(post.id)">Delete</a>
+					  			<button class="button is-primary" @click="activateEdit(post)">
+					  				Edit
+					  			</button>
+								<button class="button is-danger" @click="deletePost(post.id)">Delete</button>
 							</th>
 					  	</tr>
 					  </tbody>
@@ -40,9 +63,7 @@
 				<div class="column auto">
 					<div class="tile is-parent is-vertical">
 						<div class="tile is-child">
-							<button class="button is-success" @click="$router.push({name:'post_create'})">
-								Create A New Post
-							</button>
+							<button class="button is-success"  @click="isCreateActive = !isCreateActive">Create New Post</button>
 						</div>
 						<div class="tile is-child box">
 							<span class="icon" @click="setDate({year:'',month:''})">
@@ -72,8 +93,22 @@
 <script>
 
 import PostsMixin from '../../mixins/PostsMixin.js';
+import PostCreate from './PostCreate';
+import PostEdit from './PostEdit';
 import moment from 'moment';
 	export default {
+		data(){
+			return {
+				isCreateActive: false,
+				isEditActive: false,
+				postEdited:null
+			};
+		},
+		components:{
+			PostCreate,
+			PostEdit
+		}
+		,
 		mixins: [PostsMixin],
 		filters:{
 			postOn(created_at){
@@ -110,8 +145,10 @@ import moment from 'moment';
 								});
 					  }
 					});
-
-
+			},
+			activateEdit(post){
+				this.postEdited = post;
+				this.isEditActive = !this.isEditActive;
 			}
 		}
 	}

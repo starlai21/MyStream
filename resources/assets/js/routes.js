@@ -38,21 +38,12 @@ let routes = [
       		requireAuth: true
     	},
     	children:[
-    		{
-    			path:'post/:postId/edit',
-    			name:'post_edit',
-    			component:require('./views/admin/PostEdit.vue') 
-    		},
+
     		{
     			path:'posts/manage',
     			name:'posts_manage',
     			component:require('./views/admin/PostsManage.vue') 
-    		},
-            {
-                path:'post/create',
-                name:'post_create',
-                component:require('./views/admin/PostCreate.vue') 
-            }
+    		}
 
     	]
 
