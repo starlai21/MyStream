@@ -28,10 +28,12 @@ Vue.use(Toasted);
 Vue.use(VueRouter);
 
 Vue.directive('highlight',(el)=>{
-	let blocks = el.querySelectorAll('pre code');
-    blocks.forEach((block) => {
-        hljs.highlightBlock(block);
-    });
+	Vue.nextTick(()=>{
+		let blocks = el.querySelectorAll('pre code');
+	    blocks.forEach((block) => {
+	        hljs.highlightBlock(block);
+	    });
+	});
 });
 
 

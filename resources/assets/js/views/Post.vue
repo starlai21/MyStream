@@ -7,6 +7,9 @@
 		  style="position: fixed;top: 50%;left: 50%;
   transform: translate(-50%, -50%);"
 		/>
+	<back-to-top text="Back to top" visibleOffset="600">
+		<a class="button is-dark">Back to Top</a>
+	</back-to-top>
 	<div class="columns">
 		<div class="column">
 			<span class="icon"  @click="$router.go(-1)">
@@ -29,14 +32,17 @@
 					  	<span class="tag is-light">{{post.created_at | postOn}}</span>
 					  </div>
 					</nav>
-					<vue-markdown :source="post.content"  :toc="true" toc-class="menu-list" toc-id="table" @toc-rendered="processAnchors" :toc-first-level="1" :toc-last-level="3"
-					 v-highlight></vue-markdown>
+					
+					<vue-markdown v-highlight :source="post.content"  :toc="true" toc-class="menu-list" toc-id="table" @toc-rendered="processAnchors" :toc-first-level="1" :toc-last-level="3"
+					 ></vue-markdown>
+					
 				  	<!-- <div v-html="markDown(post.content)" v-highlight></div> -->
 				</div>
+				<div id="gitalk-container"></div>
 			</div>
 		</div>
 		<div class="column is-3 is-offset-1 is-hidden-mobile" v-show="!isLoading">
-			<div id="toc" class="follow-scroll">
+			<div id="toc">
 				<p class="menu-label">
 			    	Table of Contents
 			  	</p>
@@ -58,7 +64,11 @@
 import Post from '../models/Post.js';
 import Tag from './components/Tag';
 import moment from 'moment';
-import VueMarkdown from 'vue-markdown'
+import VueMarkdown from 'vue-markdown';
+import BackToTop from 'vue-backtotop';
+import 'gitalk/dist/gitalk.css';
+import Gitalk from 'gitalk';
+
 
 
 	export default {
@@ -114,23 +124,6 @@ import VueMarkdown from 'vue-markdown'
 					$(window).bind('scroll',function(){
 
 						var scrollTop = $(this).scrollTop();
-
-						//scroll toc
-						if (scrollTop >= $("#table li a[href^='#']").last().offset().top - topMargin){
-							scrollDistance += originalScrollDistance;
-							var x = scrollTop
-							$('#toc').stop(false,false).animate({top: x},50);
-							// alert($("#table li a[href^='#']").last().offset().top);
-						}
-
-						// if (scrollTop + originalFirstY + topMargin <= $(".menu-label").first().offset().top){
-						// 	if (scrollDistance != 0){
-						// 		scrollDistance -= originalScrollDistance/2;
-						// 	}
-						// 	$('#toc').stop(false,false).animate({top: scrollDistance},50);
-						// }
-
-
 						var topSeg = null
                     	for (var idx in segs) {
                     	    var seg = segs[idx]
@@ -167,7 +160,21 @@ import VueMarkdown from 'vue-markdown'
 		},
 		components:{
 			'tag':Tag,
-			VueMarkdown
+			VueMarkdown,
+			BackToTop 
+		},
+		mounted(){
+			const gitalk = new Gitalk({
+			  clientID: '47cbca2404878e6637ab',
+			  clientSecret: '90ad2bdb2db2b14ceeac4be7035e2cbd8f949b1a',
+			  repo: 'MyStream',
+			  owner: 'starlai21',
+			  admin: ['starlai21'],
+			  id: location.pathname,      // Ensure uniqueness and length less than 50
+			  distractionFreeMode: false  // Facebook-like distraction free mode
+			})
+
+			gitalk.render('gitalk-container')
 		}
 	}
 </script>
