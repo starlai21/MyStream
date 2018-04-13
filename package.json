@@ -27,6 +27,7 @@
     "moment": "^2.21.0",
     "sweetalert2": "^7.18.0",
     "vue-input-tag": "^1.0.3",
+    "vue-markdown": "^2.2.4",
     "vue-toasted": "^1.1.24",
     "vuex": "^3.0.1"
   }

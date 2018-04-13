@@ -4,12 +4,16 @@
 @section('body')
 	<div id="app">
 	    @include('layouts.header')    
-	    <section class="section body">
+	    <section class="section">
 	        <div class="container">
-	        	<keep-alive>
-	            	<router-view v-if="$route.meta.keepAlive"></router-view>
-	        	</keep-alive>
-	        	<router-view v-if="!$route.meta.keepAlive"></router-view>
+		        	<keep-alive>
+		        		{{-- <transition name="slide"> --}}
+		            		<router-view v-if="$route.meta.keepAlive"></router-view>
+		            	{{-- </transition> --}}
+		        	</keep-alive>
+		        	
+		        		<router-view v-if="!$route.meta.keepAlive"></router-view>
+	        		
 	        </div>
 	    </section>
 	    @include('layouts.footer')  
