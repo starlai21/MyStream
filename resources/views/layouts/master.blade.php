@@ -20,6 +20,14 @@
             .footer {
               height: 20px;
             }
+            .fade-enter-active,
+            .fade-leave-active {
+                transition: opacity .4s
+            }
+            .fade-enter,
+            .fade-leave {
+                opacity: 0
+            }
 
 
         </style>

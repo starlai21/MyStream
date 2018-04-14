@@ -14,8 +14,8 @@ let routes = [
 	},
 
 	{
-		path:'/about',
-		component: require('./views/About.vue'),
+		path:'/archives',
+		component: require('./views/Archive.vue'),
 		meta: {
       		keepAlive: true 
     	}

@@ -59,7 +59,8 @@ new Vue({
     router,
     store,
     data:{
-    	navOpen:false,
+    	isNavOpen:false,
+        isAboutOpen:false
 
     },
     computed:mapState({
@@ -67,7 +68,7 @@ new Vue({
     }),
     methods:{
     	navToggle(){
-    		this.navOpen = !this.navOpen;
+    		this.isNavOpen = !this.isNavOpen;
     	},
     	logout(){
  			this.$store.dispatch('logout');

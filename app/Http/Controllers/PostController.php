@@ -9,21 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    //
-
 
     public function index($postId = null){
         sleep(1);
     	if ($postId != null){
-            // try{
-            //     $post = Post::with('tags:name')->findOrFail($postId);
-            //     return $post;
-            // }
-            // catch(ModelNotFoundException $e){
-            //     return response()
-            //         ->json(['status' => 'error',
-            //                 'message' => 'The post does not exist.']);
-            // }
             $post = Post::with('tags:name')->findOrFail($postId);
             return $post;
     		
@@ -33,7 +22,12 @@ class PostController extends Controller
             if ($request = request(['month','year','tag'])){
                 $posts->filter($request);
             }
-    		return $posts->with('tags:name')->paginate(6);
+            if (request('paginate') == 'false')
+                return $posts->with('tags:name')->get();
+                // return $this->archives();
+            else
+                return $posts->with('tags:name')->paginate(6);
+
     	}
     }
 

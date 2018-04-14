@@ -26,6 +26,8 @@ window.marked = marked;
 window.Vue = Vue;
 Vue.use(Toasted);
 Vue.use(VueRouter);
+var VueAffix = require('vue-affix');
+Vue.use(VueAffix);
 
 Vue.directive('highlight',(el)=>{
 	Vue.nextTick(()=>{

@@ -20,7 +20,7 @@
 	<div class="columns" v-show="!isLoading">
 	  	<div class="column is-8">
 			<div>
-				<div class="content">
+				<div class="content" id="example-content">
 				  	<h1 class="has-text-centered">{{post.title}}</h1>
 
 				  	<nav class="level is-mobile">
@@ -42,12 +42,19 @@
 			</div>
 		</div>
 		<div class="column is-3 is-offset-1 is-hidden-mobile" v-show="!isLoading">
-			<div id="toc">
+<!-- 			<div id="toc">
 				<p class="menu-label">
 			    	Table of Contents
 			  	</p>
 				<div id="table"></div>				
-			</div>
+			</div> -->
+
+			<affix relative-element-selector="#example-content" style="width: 300px" >
+				<div id="toc">
+					<p class="menu-label">Table of Contents</p>
+					<div id="table"></div>				
+				</div>
+			</affix>
 
 		</div>
 	</div>
