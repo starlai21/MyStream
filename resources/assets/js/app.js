@@ -1,7 +1,6 @@
 import './bootstrap';
 import router from './routes';
 import store from './store/store';
-import {mapState} from 'vuex';
 import { FingerprintSpinner } from 'epic-spinners';
 
 //axios configuration.
@@ -59,19 +58,7 @@ new Vue({
     router,
     store,
     data:{
-    	isNavOpen:false,
-        isAboutOpen:false
 
     },
-    computed:mapState({
-    	token: state => state.token
-    }),
-    methods:{
-    	navToggle(){
-    		this.isNavOpen = !this.isNavOpen;
-    	},
-    	logout(){
- 			this.$store.dispatch('logout');
-    	}
-    }
+
 });

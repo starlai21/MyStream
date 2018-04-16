@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use App\Tag;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,22 +12,31 @@ class PostController extends Controller
 {
 
     public function index($postId = null){
-        sleep(1);
+        // sleep(1);
     	if ($postId != null){
-            $post = Post::with('tags:name')->findOrFail($postId);
+            $post = Post::with(['user:name,id','tags:name'])->findOrFail($postId);
             return $post;
     		
     	}
     	else{
+            if (request('userName')){
+                if (!User::where('name', '=', request('userName'))->exists()) {
+                    return response()
+                            ->json(['status' => 'error',
+                                    'message' => 'There is no such blog.']);
+                }
+            }
+
             $posts = Post::latest();
-            if ($request = request(['month','year','tag'])){
+            if ($request = request(['month','year','tag','userName'])){
                 $posts->filter($request);
             }
-            if (request('paginate') == 'false')
+            if (request('paginate') == 'false'){
                 return $posts->with('tags:name')->get();
-                // return $this->archives();
-            else
+            }
+            else{
                 return $posts->with('tags:name')->paginate(6);
+            }
 
     	}
     }

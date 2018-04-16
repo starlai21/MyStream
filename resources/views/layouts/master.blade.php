@@ -10,6 +10,8 @@
         <!-- Fonts -->
         <link rel="stylesheet" href="/css/app.css">
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+
+        
         <style>
             [v-cloak]{display: none}
 
@@ -18,7 +20,7 @@
               padding: 40px 40px 0 20px;
             }
             .footer {
-              height: 20px;
+              height: 40px;
             }
             .fade-enter-active,
             .fade-leave-active {

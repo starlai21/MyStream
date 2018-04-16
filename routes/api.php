@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostController;
+use App\User;
 use Illuminate\Http\Request;
 
 /*
@@ -14,14 +15,22 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 
 Route::get('/posts/archives','PostController@archives');
 Route::get('/posts/tags','PostController@tags');
 Route::get('/posts/{postId?}','PostController@index');
+
+Route::get('/checkUser',function(Request $request){
+	if (!User::where('name', '=', $request->input('userName'))->exists()) {
+		abort(404);
+    }
+    return 'done';
+   
+});
 
 
 Route::prefix('auth')->group(function($router) {

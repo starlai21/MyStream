@@ -22,8 +22,9 @@ export default {
   	    };
   	},
   	created(){
-  	    this.isLoading = true;
-
+      this.isLoading = true;
+      if (this.userName)
+        this.params['userName'] = this.userName;
 	    Post.all(data => {
   	      this.posts = data.data;
   	      this.setPagination(data);
@@ -31,7 +32,7 @@ export default {
   	    },error => {
   	      this.isLoading = false;
   	      console.log(error);
-  	    });
+  	    },null,this.params);
   	    Post.tags(data => this.tags = data);
   	},
   	methods:{

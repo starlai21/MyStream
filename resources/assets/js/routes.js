@@ -3,32 +3,50 @@ import store from './store/store';
 import * as types from './store/types';
 
 
+
+function checkUser(userName,next){
+    axios.get('/api/checkUser',{params:{'userName':userName}})
+            .then(r => {
+                next();
+            })
+            .catch(e => {
+                next({name:'404'});
+            });
+}
+
+
 let routes = [
+
+    {
+        path:'*',
+        name: '404',
+        component: require('./views/404.vue')
+    },
+
 	{
-		path:'/',
-        name:'home',
-		component: require('./views/Home.vue'),
+		path:'/blog/:userName',
+        name:'blog_home',
+		component: require('./views/blog/Home.vue'),
 		meta: {
-      		keepAlive: true 
+      		keepAlive: true,
+            requireCheck: true
     	}
 	},
 
-	{
-		path:'/archives',
-		component: require('./views/Archive.vue'),
-		meta: {
-      		keepAlive: true 
-    	}
-	},
+    {
+        path:'/blog/:userName/archives',
+        name:'archives',
+        component: require('./views/blog/Archive.vue'),
+        meta: {
+            requireCheck: true
+        }
+    },
 
-	{
-		path:'/post/:postId',
-		name:'post',
-		component: require('./views/Post.vue'),
-		meta: {
-      		keepAlive: false
-    	}
-	},
+    {
+        path:'post/:postId',
+        name:'post',
+        component: require('./views/blog/Post.vue')
+    },    
 
 	{
 		path:'/admin',
@@ -62,7 +80,8 @@ if (window.localStorage.getItem('token')) {
 
 const router = new VueRouter({
 	routes,
-	linkActiveClass: 'is-active'
+	linkActiveClass: 'is-active',
+    mode: 'history'
 });
 
 router.beforeEach((to, from, next) => {
@@ -77,7 +96,10 @@ router.beforeEach((to, from, next) => {
             })
         }
     }
-    else {
+    else if (to.matched.some(r => r.meta.requireCheck)){
+        checkUser(to.params.userName,next);
+    }
+    else{
         next();
     }
 })

@@ -11,8 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::view('/{url}', 'welcome')
+		->where(['url' => 'blog|admin|login']);
+Route::view('/{url}/{query}', 'welcome')
+	 ->where(['url' => 'blog|admin|login'])
+     ->where('query', '.*');
+
+
+Route::get('/',function(){
+	return view('home');
 });
 
 

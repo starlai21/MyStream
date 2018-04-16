@@ -8,7 +8,7 @@ class Post extends Model
 {
     
 	protected $fillable = ['title','content','abstract','user_id'];
-
+    protected $hidden = ['user_id'];
 
  //    public function user(){
  //    	return $this->belongsTo(User::class);
@@ -30,6 +30,11 @@ class Post extends Model
         if (isset($filters['tag'])){
             $query->whereHas('tags',function($q) use($filters){
                 $q->where('name',$filters['tag']);
+            });
+        }
+        if (isset($filters['userName'])){
+            $query->whereHas('user',function($q) use($filters){
+                $q->where('name',$filters['userName']);
             });
         }
 
@@ -56,5 +61,9 @@ class Post extends Model
 
     public function tags(){
     	return $this->belongsToMany(Tag::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class,'user_id','id');
     }
 }

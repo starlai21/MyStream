@@ -50,9 +50,11 @@
 					  		<th>{{post.created_at|postOn}}</th>
 					  		<th>
 					  			<button class="button is-primary" @click="activateEdit(post)">
-					  				Edit
+					  				<i class="fa fa-edit" style="font-size:24px"></i>
 					  			</button>
-								<button class="button is-danger" @click="deletePost(post.id)">Delete</button>
+								<button class="button is-danger" @click="deletePost(post.id)">
+									<i class="fa fa-trash" style="font-size:24px"></i>
+								</button>
 							</th>
 					  	</tr>
 					  </tbody>
