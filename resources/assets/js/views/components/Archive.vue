@@ -10,14 +10,14 @@
 import Post from '../../models/Post.js';
 
 	export default {
-		props:['date','userName'],
+		props:['date'],
 		data(){
 			return{
 				archives:[]
 			}
 		},
 		created(){
-			Post.archives(data => this.archives = data,{userName: this.userName});
+			Post.archives(data => this.archives = data,{userName: this.$route.params.userName});
 		},
 		methods:{
 			tagClicked(year,month){
@@ -36,12 +36,13 @@ import Post from '../../models/Post.js';
 				else if(this.date['year'] == year && this.date['month'] == month)
 					return true;
 				return false;
+			},
+			updateArchives(){
+				Post.archives(data => this.archives = data,{userName: this.$route.params.userName});
 			}
 		},
 		watch:{
-			userName(newUserName,oldUserName){
-				Post.archives(data => this.archives = data,{userName: newUserName});
-			}
+			'$route.params.userName': 'updateArchives'
 		}
 	}
 </script>

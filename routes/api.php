@@ -20,24 +20,58 @@ use Illuminate\Http\Request;
 // });
 
 
+//fetch posts api.
 Route::get('/posts/archives','PostController@archives');
 Route::get('/posts/tags','PostController@tags');
-Route::get('/posts/{postId?}','PostController@index');
+Route::get('/posts','PostController@index');
 
+
+
+
+
+
+//check user's existence.
 Route::get('/checkUser',function(Request $request){
-	if (!User::where('name', '=', $request->input('userName'))->exists()) {
+  $userName = $request->input('userName');
+	if (!User::exists($userName)) {
 		abort(404);
     }
+  $blog1 = ['name' => 'LoL',
+       'slogan' => 'Hello, this is laravel\'s blog',
+       'color' => 'is-danger'];
+  $blog2 = ['name' => 'Dota2',
+       'slogan' => 'Hello, this is dota2\'s blog',
+       'color' => 'is-success'];
+  if ($userName == 'laravel')
+    return response()
+              ->json(['status' => 'sucess',
+                     'blog' => $blog1]);
+  else
+    return response()
+              ->json(['status' => 'sucess',
+                     'blog' => $blog2]);
+
 });
 
 
+
+
+
+
+//login & logout api
 Route::prefix('auth')->group(function($router) {
     $router->post('login', 'AuthController@login');
     $router->post('logout', 'AuthController@logout');
-
-
 });
 
+
+
+
+
+
+
+
+//post management api.
 Route::middleware(['refresh.token'])->group(function($router) {
    	 // $router->get('profile',function(){return 'done';});
     $router->post('post/{post}/edit','PostController@update');

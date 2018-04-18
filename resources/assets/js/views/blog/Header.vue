@@ -1,5 +1,5 @@
 <template>
-	<section class="hero is-primary is-bold">
+	<section class="hero is-primary is-bold" :class="blog.color">
   <!-- Hero head: will stick at the top -->
   <div class="modal" :class="{'is-active': isAboutOpen}">
     <div class="modal-background" @click="isAboutOpen = !isAboutOpen"></div>
@@ -23,7 +23,6 @@
           Phasellus nec iaculis mauris. <a>@bulmaio</a>.
           <a href="#">#css</a> <a href="#">#responsive</a>
           <br>
-          <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
         </div>
       </div>
     </div>
@@ -34,7 +33,7 @@
       <div class="container">
         <div class="navbar-brand">
           <a class="navbar-item" @click="isAboutOpen = !isAboutOpen">
-            <h1 class= "title is-6">Laohubushimao</h1>
+            <h1 class= "title is-6">{{userName}}</h1>
           </a>
           <span class="navbar-burger burger" data-target="navbarMenuHeroC" @click="navToggle">
             <span></span>
@@ -46,7 +45,7 @@
           <div class="navbar-end">
 
 
-            <router-link v-if="token" :to="{ name: 'admin', params: { userName: userName }}" class="navbar-item" @click.native="isNavOpen && navToggle()">
+            <router-link v-if="token" :to="{ name: 'admin', params: { userName: loginedUserName }}" class="navbar-item" @click.native="isNavOpen && navToggle()">
                <span>Manage Blog</span>
             </router-link>
             <router-link v-else :to="{ name: 'login'}" class="navbar-item" @click.native="isNavOpen && navToggle()">
@@ -74,10 +73,10 @@
   <div class="hero-body">
     <div class="container has-text-centered">
       <h1 class="title">
-        My Stream
+        {{blog.name}}
       </h1>
       <h2 class="subtitle">
-      	This is a demo.
+      	{{blog.slogan}}
       </h2>
     </div>
   </div>
@@ -88,11 +87,18 @@
   <nav class="tabs is-boxed is-centered">
     <div class="container">
       <ul>
-        <router-link tag="li" :to="{ name: 'blog_home', params: { userName: this.$route.params.userName }}" exact>
+<!--         <router-link tag="li" :to="{ name: 'blog_home', params: { userName: this.$route.params.userName }}" exact>
+          <a>Home</a>
+        </router-link>   -->
+        <router-link tag="li" :to="{ name: 'blog_home', params: { userName: userName }}" exact>
           <a>Home</a>
         </router-link>  
 
-        <router-link tag="li" :to="{ name: 'archives', params: { userName: this.$route.params.userName }}">
+<!--         <router-link tag="li" :to="{ name: 'archives', params: { userName: this.$route.params.userName }}">
+          <a>Archives</a>
+        </router-link> -->
+
+        <router-link tag="li" :to="{ name: 'archives', params: { userName: userName }}">
           <a>Archives</a>
         </router-link>
 
@@ -104,7 +110,6 @@
 
 </section>
 </template>
-
 <script type="text/javascript">
 import {mapState} from 'vuex';
 	export default {
@@ -114,17 +119,28 @@ import {mapState} from 'vuex';
         isAboutOpen:false
 			};
 		},
-   		methods:{
-    		navToggle(){
-    			this.isNavOpen = !this.isNavOpen;
-    		},
-    		logout(){
- 				this.$store.dispatch('logout');
-    		}
+    created(){
+
+    },
+   	methods:{
+    	navToggle(){
+    		this.isNavOpen = !this.isNavOpen;
     	},
-    	computed:mapState({
-    		token: state => state.token,
-        userName: state => state.userName
-   		 })
+    	logout(){
+        this.$store.dispatch('logout');
+    	}
+    },
+    computed: mapState({
+      token: state => state.token,
+      loginedUserName: state => state.userName,
+      userName: state => state.tempUserName,
+      blog: state => state.blog
+   	 }),
+    watch:{
+      userName(n,o){
+        console.log("new user name "+n);
+        console.log("old user name "+o);
+      }
+    }
 	}
 </script>

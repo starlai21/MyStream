@@ -40,11 +40,7 @@
   </section>
 </template>
 <style type="text/css">
-	html,body {
-  font-family: 'Open Sans', serif;
-  font-size: 16px;
-  font-weight: 300;
-}
+
 .hero.is-success {
   background: #F2F6FA;
 }

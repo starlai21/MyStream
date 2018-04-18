@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <pagination @go="fetchPosts" :pagination="pagination" v-show="!isLoading"></pagination>
+      <pagination @go="updatePosts" :pagination="pagination" v-show="!isLoading"></pagination>
     </div>
   </section>
   <blog-footer></blog-footer>
@@ -63,7 +63,7 @@
 import Header from './Header';
 import PostReview from '../components/PostReview';
 import PostsMixin from '../../mixins/PostsMixin.js';
-
+import {mapState} from 'vuex';
 
   export default {
     data(){
@@ -71,21 +71,23 @@ import PostsMixin from '../../mixins/PostsMixin.js';
         
       };
     },
+    created(){
+
+    },
     mixins: [PostsMixin],
     components:{
         'post-review': PostReview,
         'blog-header': Header
       },
-    computed:{
-      userName(){
-        return this.$route.params.userName;
-      }
-    },
+    computed: mapState({
+      userName: state => state.tempUserName,
+      blog: state => state.blog
+     }),
     watch:{
-      // userName(newUserName, oldUserName){
-      //   this.params['userName'] = newUserName;
-      //   this.fetchPosts();
-      // }
+      userName(newUserName, oldUserName){
+        this.params['userName'] = newUserName;
+        this.updateAll();
+      }
     }
   }
     

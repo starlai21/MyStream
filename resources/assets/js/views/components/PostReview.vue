@@ -2,7 +2,7 @@
 	<article class="tile is-child box">
             
     	<p class="title">
-    	  	<router-link :to="{ name: 'post',params:{postId:post.id,userName:userName} }">
+    	  	<router-link :to="{ name: 'post',params:{postId: post.id, userName: userName} }">
     	    	{{post.title}} <span class="tag is-light">{{postOn(post)}}</span>
     	  	</router-link>
     	</p>          

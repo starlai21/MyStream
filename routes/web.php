@@ -13,15 +13,14 @@
 
 
 Route::view('/{url}', 'welcome')
-		->where(['url' => 'blog|admin|login']);
-Route::view('/{url}/{query}', 'welcome')
-	 ->where(['url' => 'blog|admin|login'])
-     ->where('query', '.*');
+		->where('url','.*');
+// Route::view('/{url}/{query}', 'welcome')
+// 	 ->where(['url' => 'blog|admin|login'])
+//      ->where('query', '.*');
+// Route::view('*','welcome');
 
 
-Route::get('/',function(){
-	return view('home');
-});
+
 
 
 

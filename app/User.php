@@ -29,6 +29,12 @@ class User extends Authenticatable implements JWTSubject
     ];
 
 
+
+
+    public static function exists($userName){
+        return static::where('name', $userName)->exists();
+    }
+
     public function posts(){
         return $this->hasMany(Post::class);
     }

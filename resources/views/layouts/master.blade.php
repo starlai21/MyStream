@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>Stream</title>
+        <link rel="shortcut icon" href="{{asset('images/avatar.jpg')}}" >
 
         <!-- Fonts -->
         <link rel="stylesheet" href="/css/app.css">
@@ -29,6 +30,11 @@
             .fade-enter,
             .fade-leave {
                 opacity: 0
+            }
+            html,body {
+/*                font-family: 'Open Sans', serif;
+                font-size: 16px;
+                font-weight: 300;*/
             }
 
 

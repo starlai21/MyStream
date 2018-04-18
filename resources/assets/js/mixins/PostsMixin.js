@@ -7,8 +7,8 @@ export default {
 
 	components:{
 		'archive': Archive,
- 	    'tags': Tag,
- 	    'pagination': Pagination
+ 	  'tags': Tag,
+ 	  'pagination': Pagination
 	},
 	data(){
   	    return{
@@ -22,18 +22,9 @@ export default {
   	    };
   	},
   	created(){
-      this.isLoading = true;
       if (this.userName)
         this.params['userName'] = this.userName;
-	    Post.all(data => {
-  	      this.posts = data.data;
-  	      this.setPagination(data);
-  	      this.isLoading = false;
-  	    },error => {
-  	      this.isLoading = false;
-  	      console.log(error);
-  	    },null,this.params);
-  	    Post.tags(data => this.tags = data,{userName:this.userName});
+      this.updateAll();
   	},
   	methods:{
   	  setPagination(data){
@@ -46,7 +37,11 @@ export default {
   	        };
   	    this.pagination = pagination;
   	  },
-  	  fetchPosts(pageUrl){
+      updateAll(){
+        this.updatePosts();
+        this.updateTags();
+      },
+  	  updatePosts(pageUrl){
   	    this.isLoading = true;
   	    Post.all(data => {
   	      this.posts = data.data;
@@ -59,21 +54,23 @@ export default {
   	    pageUrl,this.params);
   	    this.params = {};
         this.params['userName'] = this.userName;
-        Post.tags(data => this.tags = data,{userName:this.userName});
   	  },
+      updateTags(){
+        Post.tags(data => this.tags = data,{userName:this.userName});
+      },
   	  setDate(date){
   	    this.params['month'] = date.month;
   	    this.params['year'] = date.year;
   	    this.params['tag'] = this.activeTag;
   	    this.activeDate = date;
-  	    this.fetchPosts();
+  	    this.updatePosts();
   	  },
   	  setTag(tag){
   	    this.params['tag'] = tag;
   	    this.params['month'] = this.activeDate['month'];
   	    this.params['year'] = this.activeDate['year'];
   	    this.activeTag = tag;
-  	    this.fetchPosts();
+  	    this.updatePosts();
   	  }
   	}
 }

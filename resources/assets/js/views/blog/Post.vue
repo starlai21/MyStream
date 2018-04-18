@@ -26,12 +26,12 @@
 						<div class="content" id="example-content">
 						  	<h1 class="has-text-centered">{{post.title}}</h1>
 		
-						  	<nav class="level is-mobile">
-							  <div class="level-item level-left has-text-centered">
+						  	<nav class="level">
+							  <div class="level-item  has-text-centered">
 							  	<tag :tags="post.tags"></tag>
 							  </div>
 							 
-							  <div class="level-item level-right has-text-centered">
+							  <div class="level-item  has-text-centered">
 							  	<span class="tag is-light">{{post.created_at | postOn}}</span>
 							  	<span class="tag is-primary">{{post.user && post.user.name}}</span>
 							  </div>
@@ -61,9 +61,7 @@
 
 </template>
 <style>
-	.follow-scroll {
-    position: relative;
-}
+
 </style>
 
 <script>
@@ -78,11 +76,11 @@ import Header from './Header';
 
 
 	export default {
+		props:['postId','userName'],
 		data(){
 			return {
 				isLoading: false,
-				post:[],
-				postId:this.$route.params.postId
+				post:[]
 			};
 		},
 		filters:{
@@ -115,12 +113,7 @@ import Header from './Header';
 				    	$('body, html').animate({scrollTop: pos});
 					});
 					
-					var originalLastY = $("#table li a[href^='#']").last().offset().top,
-						originalFirstY = $(".menu-label").first().offset().top,
-						originalScrollDistance = originalLastY - originalFirstY,
-						scrollDistance = 0;
 
-					var topMargin = 200;
 
 					var segs = [];
 					$("a.toc-anchor").each(function(index,node){
@@ -153,6 +146,7 @@ import Header from './Header';
 			}
 		},
 		created(){
+			console.log(this.postId+" " + this.userName);
 			this.isLoading = true;
 			Post.fetchPost(data => {
 				this.post = data;
@@ -160,8 +154,8 @@ import Header from './Header';
 			},error => {
               this.isLoading = false;
               console.log(error);
-              this.$router.push({name:'home'});
-            },this.postId);
+              this.$router.push({name:'blog_home', params: {userName: this.userName}});
+            },{postId: this.postId, userName: this.userName});
 
 		},
 		components:{

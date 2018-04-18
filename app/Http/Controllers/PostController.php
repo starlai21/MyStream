@@ -12,10 +12,14 @@ use Illuminate\Support\Facades\DB;
 class PostController extends Controller
 {
 
-    public function index($postId = null){
-        sleep(1);
-    	if ($postId != null){
-            $post = Post::with(['user:name,id','tags:name'])->findOrFail($postId);
+    public function index(){
+        //sleep(1);
+    	if (($postId = request()->input('postId')) != null){
+            $post = Post::with(['user:name,id','tags:name'])
+                            ->whereHas('user',function($q){
+                                $q->where('name',request()->input('userName'));
+                            })
+                            ->findOrFail($postId);
             return $post;
     		
     	}

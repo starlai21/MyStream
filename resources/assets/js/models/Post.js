@@ -25,8 +25,8 @@ export default class Post{
 				.catch(error => console.log(error));
 	}
 
-	static fetchPost(then,_catch,postId){
-		axios.get('/api/posts/'+postId)
+	static fetchPost(then,_catch,params){
+		axios.get('/api/posts',{params:params})
 				.then(({data}) => then(data))
 				.catch(error => {
 					_catch(error);

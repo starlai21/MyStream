@@ -8,9 +8,16 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         token: null,
-        userName: null
+        userName: null,
+        tempUserName: null,
+        blog: null
     },
     mutations: {
+
+        [types.NAMECHECKED]: (state, {userName, blog}) => {
+            state.tempUserName = userName;
+            state.blog = blog;
+        },
 
         [types.LOGINED]: (state,token) => {
             state.token = token;
@@ -73,6 +80,9 @@ export default new Vuex.Store({
         },
         refreshToken({commit},token){
             commit(types.REFRESH_TOKEN,token);
+        },
+        nameChecked({commit},{userName,blog}){
+            commit(types.NAMECHECKED,{userName,blog});
         }
     }
 })

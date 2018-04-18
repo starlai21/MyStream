@@ -10,7 +10,7 @@
 						    General
 						  </p>
 						  <ul class="menu-list">
-						    <li><a>Dashboard</a></li>
+						    <li><a>Blog Setting</a></li>
 						    <router-link :to="{name:'posts_manage'}">Posts Management</router-link>
 						  </ul>
 						</aside>

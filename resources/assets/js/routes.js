@@ -3,19 +3,43 @@ import store from './store/store';
 
 
 
-
 function checkUser(userName,next){
-    axios.get('/api/checkUser',{params:{'userName':userName}})
-            .then(r => {
-                next();
-            })
-            .catch(e => {
-                next({name:'404'});
-            });
+ 
+    if (store.state.tempUserName && store.state.tempUserName === userName){
+        next();
+    }
+    else{
+        axios.get('/api/checkUser',{params:{'userName':userName}})
+                .then(({data}) => {
+                    store.dispatch('nameChecked',{userName: userName,blog: data.blog});
+                    next();
+                })
+                .catch(e => {
+                    next({name:'404'});
+                });
+    }
+
+            // axios.get('/api/checkUser',{params:{'userName':userName}})
+            //     .then(({data}) => {
+            //         store.dispatch('nameChecked',{userName: userName,blog: data.blog});
+            //         next();
+            //     })
+            //     .catch(e => {
+            //         next({name:'404'});
+            //     });
+
+
 }
 
 
 let routes = [
+    
+
+    {
+        path:'/',
+        name: 'home',
+        component: require('./views/Home.vue')
+    },
 
     {
         path:'*',
@@ -28,7 +52,7 @@ let routes = [
         name:'blog_home',
 		component: require('./views/blog/Home.vue'),
 		meta: {
-      		keepAlive: false,
+      		keepAlive: true,
             requireCheck: true
     	}
 	},
@@ -38,7 +62,7 @@ let routes = [
         name:'archives',
         component: require('./views/blog/Archive.vue'),
         meta: {
-            keepAlive: false,
+            keepAlive: true,
             requireCheck: true
         }
     },
@@ -46,7 +70,12 @@ let routes = [
     {
         path:'/blog/:userName/post/:postId',
         name:'post',
-        component: require('./views/blog/Post.vue')
+        component: require('./views/blog/Post.vue'),
+        props: true,
+        meta: {
+            requireCheck: true,
+            keepAlive: false
+        }
     },    
 
 	{
@@ -54,7 +83,8 @@ let routes = [
 		name:'admin',
 		component: require('./views/admin/AdminHome.vue'),
 		meta: {
-      		requireAuth: true
+      		requireAuth: true,
+            requireCheck: true
     	},
     	children:[
 
@@ -87,7 +117,10 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     if (to.matched.some(r => r.meta.requireAuth)) {
         if (store.state.token) {
-            next();
+            if (to.matched.some(r => r.meta.requireCheck))
+                checkUser(to.params.userName,next);
+            else
+                next();
         }
         else {
             next({

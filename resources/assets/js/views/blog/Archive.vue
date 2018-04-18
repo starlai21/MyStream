@@ -29,12 +29,16 @@
               <div class="timeline-content">
                <p class="heading">{{month}}</p>
                 <template v-for="post in posts">
-                  <router-link :to="{ name: 'post',params:{postId:post.id} }">
-                    <p>{{post.title}}</p>
-                  </router-link>              
+                  
+                  <!-- <span class="tag is-light"> -->
+                    <router-link class="has-text-danger is-size-6-mobile" :to="{ name: 'post',params:{postId:post.id, userName: userName} }">{{post.title}}</router-link> 
+                  <br>
+<!--                   <router-link :to="{ name: 'post',params:{postId:post.id} }">
+                    {{post.title}}
+                  </router-link>  -->             
                 </template>
 
-                  </div>
+              </div>
             </div>
           </template>
 
@@ -53,19 +57,28 @@
 import Header from './Header';
 import Post from '../../models/Post.js';
 import moment from 'moment';
+import {mapState} from 'vuex';
   export default {
     data(){
       return {
         result: null,
-        years: [],
-        userName: this.$route.params.userName
+        years: []
       };
     },
     components:{
       'blog-header': Header
     },
     created(){
-      Post.all(data => {
+      this.updateAll();
+    },
+    filters:{
+      postOn(created_at){
+        return moment(created_at).format("MMMM YYYY");
+      }
+    },
+    methods:{
+      updatePosts(){
+        Post.all(data => {
 
         var result = _.groupBy(data,(post) => moment(post.created_at).format('YYYY'));
 
@@ -83,14 +96,20 @@ import moment from 'moment';
         this.result = result;
 
         
-      },error =>{
+        },error =>{
         console.log(error);
-      },null,{paginate:false,userName:this.userName});
-    },
-    filters:{
-      postOn(created_at){
-        return moment(created_at).format("MMMM YYYY");
+        },null,{paginate:false,userName: this.userName});
+      },
+      updateAll(){
+        this.updatePosts();
       }
-    }
+    },
+    watch:{
+      'userName': 'updateAll'
+    },
+    computed: mapState({
+      userName: state => state.tempUserName,
+      blog: state => state.blog
+     })
   }
 </script>
