@@ -10,14 +10,14 @@
 import Post from '../../models/Post.js';
 
 	export default {
-		props:['date'],
+		props:['date','userName'],
 		data(){
 			return{
 				archives:[]
 			}
 		},
 		created(){
-			Post.archives(data => this.archives = data);
+			Post.archives(data => this.archives = data,{userName: this.userName});
 		},
 		methods:{
 			tagClicked(year,month){
@@ -36,6 +36,11 @@ import Post from '../../models/Post.js';
 				else if(this.date['year'] == year && this.date['month'] == month)
 					return true;
 				return false;
+			}
+		},
+		watch:{
+			userName(newUserName,oldUserName){
+				Post.archives(data => this.archives = data,{userName: newUserName});
 			}
 		}
 	}

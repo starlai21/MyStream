@@ -7,12 +7,13 @@ use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
 
     public function index($postId = null){
-        // sleep(1);
+        sleep(1);
     	if ($postId != null){
             $post = Post::with(['user:name,id','tags:name'])->findOrFail($postId);
             return $post;
@@ -43,11 +44,22 @@ class PostController extends Controller
 
 
     public function archives(){
-        return Post::archives();
+        return Post::archives(request('userName'));
     }
 
     public function tags(){
-        return Tag::has('posts')->withCount('posts')->get();
+        // return Tag::whereHas('posts')
+        //             ->withCount('posts')->get();
+        
+
+        $user = User::where('name',request('userName'))->first();
+        return DB::table('posts')
+                    ->join('post_tag','posts.id','=','post_tag.post_id')
+                    ->join('tags','post_tag.tag_id','=','tags.id')
+                    ->join('users','posts.user_id','=','users.id')
+                    ->select('tags.name')
+                    ->where('users.id','=',$user->id)
+                    ->get();
     }
 
 

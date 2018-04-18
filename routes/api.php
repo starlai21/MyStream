@@ -28,8 +28,6 @@ Route::get('/checkUser',function(Request $request){
 	if (!User::where('name', '=', $request->input('userName'))->exists()) {
 		abort(404);
     }
-    return 'done';
-   
 });
 
 

@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 import store from './store/store';
-import * as types from './store/types';
+
 
 
 
@@ -28,7 +28,7 @@ let routes = [
         name:'blog_home',
 		component: require('./views/blog/Home.vue'),
 		meta: {
-      		keepAlive: true,
+      		keepAlive: false,
             requireCheck: true
     	}
 	},
@@ -38,18 +38,19 @@ let routes = [
         name:'archives',
         component: require('./views/blog/Archive.vue'),
         meta: {
+            keepAlive: false,
             requireCheck: true
         }
     },
 
     {
-        path:'post/:postId',
+        path:'/blog/:userName/post/:postId',
         name:'post',
         component: require('./views/blog/Post.vue')
     },    
 
 	{
-		path:'/admin',
+		path:'/blog/:userName/admin',
 		name:'admin',
 		component: require('./views/admin/AdminHome.vue'),
 		meta: {
@@ -74,15 +75,14 @@ let routes = [
 	}
 ];
 
-if (window.localStorage.getItem('token')) {
-    store.commit(types.LOGIN, window.localStorage.getItem('token'))
-}
 
 const router = new VueRouter({
 	routes,
 	linkActiveClass: 'is-active',
     mode: 'history'
 });
+
+
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some(r => r.meta.requireAuth)) {
@@ -103,5 +103,9 @@ router.beforeEach((to, from, next) => {
         next();
     }
 })
+
+
+
+
 
 export default router;

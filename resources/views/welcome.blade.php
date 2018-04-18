@@ -13,6 +13,6 @@
 		    <router-view v-if="!$route.meta.keepAlive"></router-view>
 		</transition>
 	        		
-	    @include('layouts.footer')  
+	    {{-- @include('layouts.footer')   --}}
 	</div>
 @stop

@@ -13,14 +13,14 @@ export default class Post{
                  });
 	}
 
-	static archives(then){
-		axios.get('/api/posts/archives')
+	static archives(then,params){
+		axios.get('/api/posts/archives',{params:params})
 				.then(({data}) => then(data))
 				.catch(error => console.log(error));
 	}
 
-	static tags(then){
-		axios.get('/api/posts/tags')
+	static tags(then,params){
+		axios.get('/api/posts/tags',{params:params})
 				.then(({data}) => then(data))
 				.catch(error => console.log(error));
 	}

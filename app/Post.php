@@ -40,7 +40,7 @@ class Post extends Model
 
 
     }
-    public static function archives(){
+    public static function archives($userName){
     	// mysql
         // return static::selectRaw('year(created_at) year, monthname(created_at) month,count(*) published')
         //     ->groupBy('year','month')
@@ -52,6 +52,9 @@ class Post extends Model
         return static::selectRaw("strftime('%Y',created_at) year, 
         						strftime('%m',created_at) month,
         						count(*) published")
+                        ->whereHas('user', function($q) use($userName){
+                            $q->where('name',$userName);
+                        })
         				->groupBy('year','month')
         				->orderByRaw('min(created_at) desc')
         				->get()
@@ -64,6 +67,6 @@ class Post extends Model
     }
 
     public function user(){
-        return $this->belongsTo(User::class,'user_id','id');
+        return $this->belongsTo(User::class);
     }
 }

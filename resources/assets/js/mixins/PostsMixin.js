@@ -33,7 +33,7 @@ export default {
   	      this.isLoading = false;
   	      console.log(error);
   	    },null,this.params);
-  	    Post.tags(data => this.tags = data);
+  	    Post.tags(data => this.tags = data,{userName:this.userName});
   	},
   	methods:{
   	  setPagination(data){
@@ -58,6 +58,8 @@ export default {
   	    },
   	    pageUrl,this.params);
   	    this.params = {};
+        this.params['userName'] = this.userName;
+        Post.tags(data => this.tags = data,{userName:this.userName});
   	  },
   	  setDate(date){
   	    this.params['month'] = date.month;

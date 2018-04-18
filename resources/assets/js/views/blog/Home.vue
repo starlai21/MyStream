@@ -16,14 +16,14 @@
         <div class="tile is-parent is-vertical is-5">
           <template v-for="(post,index) in posts">
             <template v-if="index%2 == 0">
-              <post-review :post="post" @tagUpdated="setTag" :tagName="activeTag"></post-review>
+              <post-review :userName="userName" :post="post" @tagUpdated="setTag" :tagName="activeTag"></post-review>
             </template>
           </template>
         </div>
         <div class="tile is-parent is-vertical is-5">
           <template v-for="(post,index) in posts">
             <template v-if="index%2 == 1">
-              <post-review :post="post" @tagUpdated="setTag" :tagName="activeTag"></post-review>
+              <post-review :userName="userName" :post="post" @tagUpdated="setTag" :tagName="activeTag"></post-review>
             </template>
           </template>
         </div>
@@ -33,7 +33,7 @@
               <span class="icon" @click="setDate({year:'',month:''})">
                 <i class="fa fa-calendar" style="font-size:20px;color:blue"></i>
               </span>
-            <archive @dateUpdated="setDate" @clearDate="setDate" :date="activeDate"></archive>
+            <archive :userName="userName" @dateUpdated="setDate" @clearDate="setDate" :date="activeDate"></archive>
           </div>
 
             <div class="tile is-child box">
@@ -48,6 +48,7 @@
       <pagination @go="fetchPosts" :pagination="pagination" v-show="!isLoading"></pagination>
     </div>
   </section>
+  <blog-footer></blog-footer>
 </div>
 </template>
 
@@ -67,14 +68,25 @@ import PostsMixin from '../../mixins/PostsMixin.js';
   export default {
     data(){
       return {
-        userName: this.$route.params.userName
+        
       };
     },
     mixins: [PostsMixin],
     components:{
         'post-review': PostReview,
         'blog-header': Header
+      },
+    computed:{
+      userName(){
+        return this.$route.params.userName;
       }
+    },
+    watch:{
+      // userName(newUserName, oldUserName){
+      //   this.params['userName'] = newUserName;
+      //   this.fetchPosts();
+      // }
+    }
   }
     
 </script>

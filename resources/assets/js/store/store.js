@@ -7,19 +7,36 @@ import router from '../routes';
 Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
-        user: {},
         token: null,
-        title: ''
+        userName: null
     },
     mutations: {
-        [types.LOGIN]: (state, data) => {
-            localStorage.token = data;
-            state.token = data;
+
+        [types.LOGINED]: (state,token) => {
+            state.token = token;
+            state.userName = localStorage.userName;
+        },
+
+        [types.LOGIN]: (state, {token, userName}) => {
+            localStorage.token = token;
+            localStorage.userName = userName;
+            state.token = token;
+            state.userName = userName;
+            let params = {};
+            params['userName'] = userName;
+            router.push({name:'admin', params: params});
         },
         [types.LOGOUT]: (state) => {
             router.push({name:'login'});
             localStorage.removeItem('token');
-            state.token = null
+            localStorage.removeItem('userName');
+            state.token = null;
+
+            Vue.toasted.show("Bye~", { 
+                     theme: "primary", 
+                     position: "bottom-center", 
+                     duration : 3000
+                });
         },
         [types.TITLE]: (state, data) => {
             state.title = data;
@@ -32,11 +49,6 @@ export default new Vuex.Store({
     actions: {
         logout({commit}){
             return new Promise((resolve,reject) => {
-                Vue.toasted.show("Bye~", { 
-                     theme: "primary", 
-                     position: "bottom-center", 
-                     duration : 3000
-                });
                 axios.post('/api/auth/logout')
                         .then(response => {
                             commit(types.LOGOUT);
@@ -49,15 +61,14 @@ export default new Vuex.Store({
             })
         },
 
-        logined({commit},token){
+        logined({commit},{token,userName}){
             return new Promise((resolve,reject) => {
-                commit(types.LOGIN,token);
+                commit(types.LOGIN,{token,userName});
                 Vue.toasted.show("Welcome back~", { 
                      theme: "primary", 
                      position: "bottom-center", 
                      duration : 3000
                 });
-                router.push({name:'admin'});
             })
         },
         refreshToken({commit},token){

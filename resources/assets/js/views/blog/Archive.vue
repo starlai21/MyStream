@@ -44,6 +44,7 @@
         </div>
       </div>
     </section>
+    <blog-footer></blog-footer>
   </div>
 </template>
 

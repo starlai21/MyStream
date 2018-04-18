@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Transformers\UserTransformer;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Transformers\UserTransformer;
 
 class AuthController extends Controller
 {
@@ -32,7 +33,8 @@ class AuthController extends Controller
 
        // 使用 Auth 登录用户，如果登录成功，则返回 201 的 code 和 token，如果登录失败则返回
         return ($token = Auth::guard('api')->attempt($params))
-            ? response(['token' => 'Bearer ' . $token], 201)
+            ? response(['token'     => 'Bearer ' . $token,
+                        'userName'  => User::where('email',$params['email'])->first()->name], 201)
             : response(['errors' => [  'email' => ['Email or password is invalid'],
                                        'password' => ['Email or password is invalid'] 
                                    ]

@@ -2,7 +2,8 @@ import './bootstrap';
 import router from './routes';
 import store from './store/store';
 import { FingerprintSpinner } from 'epic-spinners';
-
+import Footer from './views/blog/Footer';
+import * as types from './store/types';
 //axios configuration.
 
 window.axios.defaults.timeout = 5000;
@@ -52,6 +53,13 @@ window.axios.interceptors.response.use(
 
 
 Vue.component('fingerprint-spinner',FingerprintSpinner);
+Vue.component('blog-footer',Footer);
+
+
+if (window.localStorage.getItem('token')) {
+    store.commit(types.LOGINED, window.localStorage.getItem('token'));
+}
+
 
 new Vue({
     el: '#app',

@@ -46,10 +46,12 @@
           <div class="navbar-end">
 
 
-            <router-link to="/admin" class="navbar-item" @click.native="isNavOpen && navToggle()">
+            <router-link v-if="token" :to="{ name: 'admin', params: { userName: userName }}" class="navbar-item" @click.native="isNavOpen && navToggle()">
                <span>Manage Blog</span>
             </router-link>
-
+            <router-link v-else :to="{ name: 'login'}" class="navbar-item" @click.native="isNavOpen && navToggle()">
+               <span>Login</span>
+            </router-link>
 
 
 
@@ -93,6 +95,8 @@
         <router-link tag="li" :to="{ name: 'archives', params: { userName: this.$route.params.userName }}">
           <a>Archives</a>
         </router-link>
+
+        
       </ul>
     </div>
   </nav>
@@ -107,7 +111,7 @@ import {mapState} from 'vuex';
 		data(){
 			return {
 				isNavOpen:false,
-        		isAboutOpen:false
+        isAboutOpen:false
 			};
 		},
    		methods:{
@@ -119,7 +123,8 @@ import {mapState} from 'vuex';
     		}
     	},
     	computed:mapState({
-    		token: state => state.token
+    		token: state => state.token,
+        userName: state => state.userName
    		 })
 	}
 </script>
