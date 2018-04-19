@@ -16,7 +16,9 @@
 						</aside>
 					</div>
 					<div class="column auto">
-						<router-view></router-view>	
+						<keep-alive>
+							<router-view></router-view>	
+						</keep-alive>
 					</div>
 					
 				</div>
@@ -26,6 +28,8 @@
 </template>
 <script>
 import Header from '../blog/Header';
+import {mapState} from 'vuex';
+
 	export default {
 
 		data(){
@@ -41,7 +45,12 @@ import Header from '../blog/Header';
 		},
 		components:{
 			'blog-header': Header
-		}
+		},
+    	computed: mapState({
+    		userName: state => state.tempUserName,
+    		loginedUserName: state => state.userName,
+    		blog: state => state.blog
+    	}),
 	}
 
 </script>

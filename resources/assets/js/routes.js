@@ -84,14 +84,15 @@ let routes = [
 		component: require('./views/admin/AdminHome.vue'),
 		meta: {
       		requireAuth: true,
-            requireCheck: true
+            requireCheck: true,
+            keepAlive: true
     	},
     	children:[
 
     		{
     			path:'posts/manage',
     			name:'posts_manage',
-    			component:require('./views/admin/PostsManage.vue') 
+    			component:require('./views/admin/PostsManage.vue')
     		}
 
     	]
@@ -117,8 +118,12 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     if (to.matched.some(r => r.meta.requireAuth)) {
         if (store.state.token) {
-            if (to.matched.some(r => r.meta.requireCheck))
-                checkUser(to.params.userName,next);
+            if (to.matched.some(r => r.meta.requireCheck)){
+                if (to.params.userName !== store.state.userName)
+                    next({name:'404'});
+                else
+                    checkUser(to.params.userName,next);
+            }
             else
                 next();
         }

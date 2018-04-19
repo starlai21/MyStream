@@ -78,7 +78,7 @@ import Post from '../../models/Post.js';
 								Post();
 							}
 							else{
-								this.$emit("posted");
+								this.$emit("posted",r.data.post);
 								this.clear();
 								Swal({
 									  type:'success',

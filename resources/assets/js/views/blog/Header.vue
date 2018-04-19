@@ -87,20 +87,20 @@
   <nav class="tabs is-boxed is-centered">
     <div class="container">
       <ul>
-<!--         <router-link tag="li" :to="{ name: 'blog_home', params: { userName: this.$route.params.userName }}" exact>
-          <a>Home</a>
-        </router-link>   -->
-        <router-link tag="li" :to="{ name: 'blog_home', params: { userName: userName }}" exact>
+        <router-link tag="li" :to="{ name: 'blog_home', params: { userName: this.$route.params.userName }}" exact>
           <a>Home</a>
         </router-link>  
-
-<!--         <router-link tag="li" :to="{ name: 'archives', params: { userName: this.$route.params.userName }}">
-          <a>Archives</a>
-        </router-link> -->
-
-        <router-link tag="li" :to="{ name: 'archives', params: { userName: userName }}">
+<!--         <router-link tag="li" :to="{ name: 'blog_home', params: { userName: userName }}" exact>
+          <a>Home</a>
+        </router-link>  
+ -->
+        <router-link tag="li" :to="{ name: 'archives', params: { userName: this.$route.params.userName }}">
           <a>Archives</a>
         </router-link>
+
+<!--         <router-link tag="li" :to="{ name: 'archives', params: { userName: userName }}">
+          <a>Archives</a>
+        </router-link> -->
 
         
       </ul>
@@ -119,9 +119,6 @@ import {mapState} from 'vuex';
         isAboutOpen:false
 			};
 		},
-    created(){
-
-    },
    	methods:{
     	navToggle(){
     		this.isNavOpen = !this.isNavOpen;
@@ -135,12 +132,6 @@ import {mapState} from 'vuex';
       loginedUserName: state => state.userName,
       userName: state => state.tempUserName,
       blog: state => state.blog
-   	 }),
-    watch:{
-      userName(n,o){
-        console.log("new user name "+n);
-        console.log("old user name "+o);
-      }
-    }
+   	 })
 	}
 </script>

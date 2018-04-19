@@ -42,7 +42,8 @@ import Post from '../../models/Post.js';
 			}
 		},
 		watch:{
-			'$route.params.userName': 'updateArchives'
+			'$route.params.userName': 'updateArchives',
+			'$store.state.notify': 'updateArchives'
 		}
 	}
 </script>

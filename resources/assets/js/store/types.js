@@ -1,3 +1,5 @@
+export const NOTIFY = 'notify';
+
 export const NAMECHECKED = 'nameChecked';
 
 export const LOGIN = 'login';

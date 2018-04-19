@@ -32,9 +32,10 @@
                 opacity: 0
             }
             html,body {
-/*                font-family: 'Open Sans', serif;
+               /* font-family: 'Open Sans', serif;*/
+                font-family: 'cursive', Comic Sans MS;
                 font-size: 16px;
-                font-weight: 300;*/
+                font-weight: 300;
             }
 
 

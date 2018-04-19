@@ -11,24 +11,28 @@
           style="position: fixed;top: 50%;left: 50%;
       transform: translate(-50%, -50%);"
         />
-
-      <div class="tile is-ancestor">
-        <div class="tile is-parent is-vertical is-5">
-          <template v-for="(post,index) in posts">
-            <template v-if="index%2 == 0">
-              <post-review :userName="userName" :post="post" @tagUpdated="setTag" :tagName="activeTag"></post-review>
+    <div class="columns">
+      <div class="column is-10">
+        <div class="tile is-ancestor">
+          <div class="tile is-parent is-vertical is-5">
+            <template v-for="(post,index) in posts">
+              <template v-if="index%2 == 0">
+                <post-review :userName="userName" :post="post" @tagUpdated="setTag" :tagName="activeTag"></post-review>
+              </template>
             </template>
-          </template>
-        </div>
-        <div class="tile is-parent is-vertical is-5">
-          <template v-for="(post,index) in posts">
-            <template v-if="index%2 == 1">
-              <post-review :userName="userName" :post="post" @tagUpdated="setTag" :tagName="activeTag"></post-review>
+          </div>
+          <div class="tile is-parent is-vertical is-5">
+            <template v-for="(post,index) in posts">
+              <template v-if="index%2 == 1">
+                <post-review :userName="userName" :post="post" @tagUpdated="setTag" :tagName="activeTag"></post-review>
+              </template>
             </template>
-          </template>
+          </div>
         </div>
-
-          <div class="tile is-parent is-vertical">
+      </div>
+      <div class="column is-auto">
+        <div class="tile is-ancestor">
+        <div class="tile is-parent is-vertical">
           <div class="tile is-child box">
               <span class="icon" @click="setDate({year:'',month:''})">
                 <i class="fa fa-calendar" style="font-size:20px;color:blue"></i>
@@ -36,7 +40,7 @@
             <archive :userName="userName" @dateUpdated="setDate" @clearDate="setDate" :date="activeDate"></archive>
           </div>
 
-            <div class="tile is-child box">
+          <div class="tile is-child box">
             <span class="icon" @click="setTag('')">
                 <i class="fa fa-tags" style="font-size:20px;color:blue"></i>
             </span>
@@ -44,6 +48,9 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
 
       <pagination @go="updatePosts" :pagination="pagination" v-show="!isLoading"></pagination>
     </div>

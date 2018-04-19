@@ -10,9 +10,15 @@ export default new Vuex.Store({
         token: null,
         userName: null,
         tempUserName: null,
-        blog: null
+        blog: null,
+        notify: 0
     },
     mutations: {
+
+
+        [types.NOTIFY]: (state, notify) => {
+            state.notify++;
+        },
 
         [types.NAMECHECKED]: (state, {userName, blog}) => {
             state.tempUserName = userName;
@@ -39,11 +45,6 @@ export default new Vuex.Store({
             localStorage.removeItem('userName');
             state.token = null;
 
-            Vue.toasted.show("Bye~", { 
-                     theme: "primary", 
-                     position: "bottom-center", 
-                     duration : 3000
-                });
         },
         [types.TITLE]: (state, data) => {
             state.title = data;
@@ -64,6 +65,11 @@ export default new Vuex.Store({
                             console.log(r);
                             commit(types.LOGOUT);
                         });
+                Vue.toasted.show("Bye~", { 
+                     theme: "primary", 
+                     position: "bottom-center", 
+                     duration : 3000
+                });
                         
             })
         },

@@ -6,7 +6,7 @@
 		  <div class="modal-background"></div>
 		  <div class="modal-card">
 		    <div class="box">
-		    	<post-create @posted="isCreateActive = !isCreateActive"></post-create>
+		    	<post-create @posted="postCreated"></post-create>
 			</div>
 		  </div>
 		  <button class="modal-close is-large" aria-label="close"  @click="isCreateActive = !isCreateActive"></button>
@@ -18,7 +18,7 @@
 		  <div class="modal-background"></div>
 		  <div class="modal-card">
 		    <div class="box">
-		    	<post-edit :post="postEdited" @updated="isEditActive = !isEditActive"></post-edit>
+		    	<post-edit :post="postEdited" @updated="postUpdated"></post-edit>
 			</div>
 		  </div>
 		  <button class="modal-close is-large" aria-label="close"  @click="isEditActive = !isEditActive"></button>
@@ -35,13 +35,13 @@
 			<div class="columns">
 				<div class="column is-four-fifths">
 					
-					<table class="table">
+					<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
 					  <thead>
 
 					    <tr>
 					      <th>Title</th>
 					      <th>Post Date</th>
-					      <th>Operations</th>
+					      <th>Actions</th>
 					    </tr>
 					  </thead>
 					  <tbody>
@@ -50,8 +50,9 @@
 					  		<th>{{post.created_at|postOn}}</th>
 					  		<th>
 					  			<button class="button is-primary" @click="activateEdit(post)">
-					  				<i class="fa fa-edit" style="font-size:24px"></i>
+					  				<i class="fa fa-edit" style="font-size:20px"></i>
 					  			</button>
+
 								<button class="button is-danger" @click="deletePost(post.id)">
 									<i class="fa fa-trash" style="font-size:24px"></i>
 								</button>
@@ -65,7 +66,7 @@
 				<div class="column auto">
 					<div class="tile is-parent is-vertical">
 						<div class="tile is-child">
-							<button class="button is-success"  @click="isCreateActive = !isCreateActive">Create New Post</button>
+							<a class="button is-success"  @click="isCreateActive = !isCreateActive">Create A New Post</a>
 						</div>
 						<div class="tile is-child box">
 							<span class="icon" @click="setDate({year:'',month:''})">
@@ -87,7 +88,7 @@
 			</div>
 			 
 		</div>
-		<pagination @go="fetchPosts" :pagination="pagination" v-show="!isLoading"></pagination>
+		<pagination @go="updatePosts" :pagination="pagination" v-show="!isLoading"></pagination>
 
 	</div>
 </template>
@@ -98,6 +99,7 @@ import PostsMixin from '../../mixins/PostsMixin.js';
 import PostCreate from './PostCreate';
 import PostEdit from './PostEdit';
 import moment from 'moment';
+import {mapState} from 'vuex';
 	export default {
 		data(){
 			return {
@@ -109,8 +111,10 @@ import moment from 'moment';
 		components:{
 			PostCreate,
 			PostEdit
-		}
-		,
+		},
+    	computed: mapState({
+    		userName: state => state.userName
+    	}),
 		mixins: [PostsMixin],
 		filters:{
 			postOn(created_at){
@@ -137,6 +141,7 @@ import moment from 'moment';
 					                });
 					                this.posts = this.posts
 									  				.filter(e => e.id != postId);
+									this.$store.commit('notify');
 								})
 								.catch(e => {
 									console.log(e);
@@ -151,6 +156,15 @@ import moment from 'moment';
 			activateEdit(post){
 				this.postEdited = post;
 				this.isEditActive = !this.isEditActive;
+			},
+			postCreated(post){
+				this.isCreateActive = !this.isCreateActive;
+				// this.posts.unshift(post);
+				this.$store.commit('notify');
+			},
+			postUpdated(){
+				this.isEditActive = !this.isEditActive;
+				this.$store.commit('notify');
 			}
 		}
 	}

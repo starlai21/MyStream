@@ -12,6 +12,20 @@ use Illuminate\Support\Facades\DB;
 class PostController extends Controller
 {
 
+    public function checkLogined(){
+        if (!Auth::user())
+            return response()
+                    ->json(['status' => 'error',
+                            'message' => 'Please try again.']);
+    }
+
+    public function checkAuthor($post){
+        $this->checkLogined();
+        if ($post->user != Auth::user())
+            return response()
+                    ->json(['status' => 'error',
+                            'message' => 'Permission denied.']);
+    }
     public function index(){
         //sleep(1);
     	if (($postId = request()->input('postId')) != null){
@@ -55,27 +69,26 @@ class PostController extends Controller
         // return Tag::whereHas('posts')
         //             ->withCount('posts')->get();
         
-
+        //needs to be improved. 
         $user = User::where('name',request('userName'))->first();
         return DB::table('posts')
                     ->join('post_tag','posts.id','=','post_tag.post_id')
                     ->join('tags','post_tag.tag_id','=','tags.id')
-                    ->join('users','posts.user_id','=','users.id')
                     ->select('tags.name')
-                    ->where('users.id','=',$user->id)
+                    ->distinct()
+                    ->where('posts.user_id','=',$user->id)
                     ->get();
     }
 
 
 
     public function store(Request $request){
+
+        $this->checkLogined();
         $params = $request->validate(['title' => 'required','abstract'=>'nullable','content'=>'required']);
 
         $tagNames = $request->validate(['tags' => 'nullable']);
-        if (!Auth::user())
-            return response()
-                    ->json(['status' => 'error',
-                            'message' => 'Please try again.']);
+
 
         $params['user_id'] = Auth::user()->id;
         $post = Post::create($params);
@@ -86,12 +99,14 @@ class PostController extends Controller
 
         return response()
                     ->json(['status' => 'success',
-                            'message' => 'Succeed to create the post.']);
+                            'message' => 'Succeed to create the post.',
+                            'post'    => Post::with('tags:name')->find($post->id)]);
 
     }
 
     public function update(Post $post,Request $request){
         if ($post){
+            $this->checkAuthor($post);
             $params = $request->validate(['title' => 'required','abstract'=>'nullable','content'=>'required']);
             $tagNames = $request->validate(['tags' => 'nullable']);
 
@@ -118,6 +133,7 @@ class PostController extends Controller
 
     public function delete(Post $post){
         if($post){
+            $this->checkAuthor($post);
             $post->delete();
             return response()
                         ->json(['status' => 'success',

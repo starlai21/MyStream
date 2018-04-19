@@ -26,6 +26,9 @@ export default {
         this.params['userName'] = this.userName;
       this.updateAll();
   	},
+    watch:{
+      '$store.state.notify':'updateAll'
+    },
   	methods:{
   	  setPagination(data){
   	    let pagination = {
