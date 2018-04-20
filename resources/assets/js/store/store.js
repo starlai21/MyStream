@@ -37,7 +37,7 @@ export default new Vuex.Store({
             state.userName = userName;
             let params = {};
             params['userName'] = userName;
-            router.push({name:'admin', params: params});
+            router.push({name:'posts_manage', params: params});
         },
         [types.LOGOUT]: (state) => {
             router.push({name:'login'});

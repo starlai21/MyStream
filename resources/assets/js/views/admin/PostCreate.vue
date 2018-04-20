@@ -36,7 +36,7 @@
 				  <p class="help is-danger" v-if="errors.content">{{errors.content[0]}}</p>
 				</div>
 				<div class="field">
-					<button class="button is-primary" @click="Post">Post</button>
+					<a class="button is-primary" @click="Post">Post</a>
 				</div>
   			</div>
 		</div>

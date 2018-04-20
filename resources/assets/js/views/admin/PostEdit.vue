@@ -31,7 +31,7 @@
 				  </div>
 				</div>
 				<div class="field">
-					<button class="button is-primary" @click="Update">Update</button>
+					<a class="button is-primary" @click="Update">Update</a>
 				</div>
   			</div>
 		</div>

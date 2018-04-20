@@ -25,13 +25,14 @@
             }
             .fade-enter-active,
             .fade-leave-active {
-                transition: opacity .4s
+                transition: opacity .8s
             }
             .fade-enter,
             .fade-leave {
                 opacity: 0
             }
-            html,body {
+
+            html,body{
                /* font-family: 'Open Sans', serif;*/
                 font-family: 'cursive', Comic Sans MS;
                 font-size: 16px;

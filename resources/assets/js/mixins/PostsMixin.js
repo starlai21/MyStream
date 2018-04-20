@@ -24,6 +24,7 @@ export default {
   	created(){
       if (this.userName)
         this.params['userName'] = this.userName;
+      this.params['pagination'] = this.blog.pagination;
       this.updateAll();
   	},
     watch:{
@@ -57,6 +58,7 @@ export default {
   	    pageUrl,this.params);
   	    this.params = {};
         this.params['userName'] = this.userName;
+        this.params['pagination'] = this.blog.pagination;
   	  },
       updateTags(){
         Post.tags(data => this.tags = data,{userName:this.userName});

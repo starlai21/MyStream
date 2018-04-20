@@ -50,11 +50,12 @@ class PostController extends Controller
             if ($request = request(['month','year','tag','userName'])){
                 $posts->filter($request);
             }
-            if (request('paginate') == 'false'){
+            $pagination = request('paginate');
+            if ($pagination == 'false'){
                 return $posts->with('tags:name')->get();
             }
             else{
-                return $posts->with('tags:name')->paginate(6);
+                return $posts->with('tags:name')->paginate($pagination);
             }
 
     	}

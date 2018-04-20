@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\PostController;
 use App\User;
 use Illuminate\Http\Request;
@@ -31,27 +32,8 @@ Route::get('/posts','PostController@index');
 
 
 //check user's existence.
-Route::get('/checkUser',function(Request $request){
-  $userName = $request->input('userName');
-	if (!User::exists($userName)) {
-		abort(404);
-    }
-  $blog1 = ['name' => 'LoL',
-       'slogan' => 'Hello, this is laravel\'s blog',
-       'color' => 'is-danger'];
-  $blog2 = ['name' => 'Dota2',
-       'slogan' => 'Hello, this is dota2\'s blog',
-       'color' => 'is-success'];
-  if ($userName == 'laravel')
-    return response()
-              ->json(['status' => 'sucess',
-                     'blog' => $blog1]);
-  else
-    return response()
-              ->json(['status' => 'sucess',
-                     'blog' => $blog2]);
+Route::get('/blog','BlogController@index');
 
-});
 
 
 
@@ -73,8 +55,11 @@ Route::prefix('auth')->group(function($router) {
 
 //post management api.
 Route::middleware(['refresh.token'])->group(function($router) {
-   	 // $router->get('profile',function(){return 'done';});
+	//post
     $router->post('post/{post}/edit','PostController@update');
     $router->post('post/{post}/delete','PostController@delete');
     $router->post('post/create','PostController@store');
+
+    //blog
+    $router->post('/blog/update','BlogController@update');
 });

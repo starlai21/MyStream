@@ -9,7 +9,7 @@
       <h2 class="subtitle">
         This page is not you are looking for.
       </h2>
-      <a class="button is-primary is-inverted" href="/">Go Back Home</a>
+      <router-link class="button is-primary is-inverted" :to="{name:'root'}">Go Back Home</router-link>
     </div>
   </div>
 </section>	

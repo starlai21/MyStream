@@ -1,5 +1,5 @@
 <template>
-<section class="hero is-success is-fullheight">
+
     <div class="hero-body">
       <div class="container has-text-centered">
         <div class="column is-4 is-offset-4">
@@ -27,22 +27,22 @@
               </div>
               <div class="field">
               </div>
-              <button class="button is-block is-primary is-large is-fullwidth" @click="login">Login</button>
+              <a class="button is-block is-primary is-large is-fullwidth" @click="login">Login</a>
           </div>
           <p class="has-text-grey">
-            <a href="../">Sign Up</a> &nbsp;·&nbsp;
-            <a href="../">Forgot Password</a> &nbsp;·&nbsp;
-            <a href="../">Need Help?</a>
+            <router-link :to="{name:'register'}">Sign Up</router-link> &nbsp;·&nbsp;
+            <a href="../">Forgot Password</a> 
+            <!-- <a href="../">Need Help?</a> -->
           </p>
         </div>
       </div>
     </div>
-  </section>
+
 </template>
 <style type="text/css">
 
 .hero.is-success {
-  background: #F2F6FA;
+/*  background: #F2F6FA;*/
 }
 .hero .nav, .hero.is-success .nav {
   -webkit-box-shadow: none;
@@ -50,10 +50,6 @@
 }
 .box {
   margin-top: 5rem;
-}
-.avatar {
-  margin-top: -70px;
-  padding-bottom: 20px;
 }
 
 input {

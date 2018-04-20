@@ -1,5 +1,5 @@
 <template>
-	<section class="hero is-primary is-bold" :class="blog.color">
+	<section class="hero is-bold" :class="blog.color">
   <!-- Hero head: will stick at the top -->
   <div class="modal" :class="{'is-active': isAboutOpen}">
     <div class="modal-background" @click="isAboutOpen = !isAboutOpen"></div>
@@ -45,7 +45,7 @@
           <div class="navbar-end">
 
 
-            <router-link v-if="token" :to="{ name: 'admin', params: { userName: loginedUserName }}" class="navbar-item" @click.native="isNavOpen && navToggle()">
+            <router-link v-if="token" :to="{ name: 'posts_manage', params: { userName: loginedUserName }}" class="navbar-item" @click.native="isNavOpen && navToggle()">
                <span>Manage Blog</span>
             </router-link>
             <router-link v-else :to="{ name: 'login'}" class="navbar-item" @click.native="isNavOpen && navToggle()">

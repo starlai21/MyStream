@@ -9,26 +9,15 @@ function checkUser(userName,next){
         next();
     }
     else{
-        axios.get('/api/checkUser',{params:{'userName':userName}})
+        axios.get('/api/blog',{params:{'userName':userName}})
                 .then(({data}) => {
                     store.dispatch('nameChecked',{userName: userName,blog: data.blog});
                     next();
                 })
                 .catch(e => {
-                    next({name:'404'});
+                    next({name:'error'});
                 });
     }
-
-            // axios.get('/api/checkUser',{params:{'userName':userName}})
-            //     .then(({data}) => {
-            //         store.dispatch('nameChecked',{userName: userName,blog: data.blog});
-            //         next();
-            //     })
-            //     .catch(e => {
-            //         next({name:'404'});
-            //     });
-
-
 }
 
 
@@ -37,13 +26,30 @@ let routes = [
 
     {
         path:'/',
-        name: 'home',
-        component: require('./views/Home.vue')
+        component: require('./views/Home.vue'),
+        children: [
+            {
+                path:'login',
+                name:'login',
+                component: require('./views/Login.vue')
+            },      
+
+            {
+                path:'register',
+                name: 'register',
+                component: require('./views/Register.vue')
+            },
+            {
+                path:'',
+                name:'root',
+                component: require('./views/Root.vue')
+            }
+        ]
     },
 
     {
         path:'*',
-        name: '404',
+        name: 'error',
         component: require('./views/404.vue')
     },
 
@@ -90,19 +96,19 @@ let routes = [
     	children:[
 
     		{
-    			path:'posts/manage',
+    			path:'postsManagement',
     			name:'posts_manage',
     			component:require('./views/admin/PostsManage.vue')
-    		}
+    		},
+
+            {
+                path:'blogSetting',
+                name: 'blog_setting',
+                component: require('./views/admin/BlogSetting.vue')
+            }
 
     	]
 
-	},
-
-	{
-		path:'/login',
-		name:'login',
-		component: require('./views/Login.vue'),
 	}
 ];
 
@@ -120,7 +126,7 @@ router.beforeEach((to, from, next) => {
         if (store.state.token) {
             if (to.matched.some(r => r.meta.requireCheck)){
                 if (to.params.userName !== store.state.userName)
-                    next({name:'404'});
+                    next({name:'error'});
                 else
                     checkUser(to.params.userName,next);
             }

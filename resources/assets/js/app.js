@@ -67,6 +67,6 @@ new Vue({
     store,
     data:{
 
-    },
+    }
 
 });

@@ -93,6 +93,7 @@
 	</div>
 </template>
 
+
 <script>
 
 import PostsMixin from '../../mixins/PostsMixin.js';

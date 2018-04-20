@@ -14,7 +14,7 @@
 
 
           <div class="timeline-item">
-          <div class="timeline-marker is-primary" :class="blog.color"></div>
+          <div class="timeline-marker is-black" :class="filterColor(blog.color)"></div>
           <div class="timeline-content">
             <p class="heading">Keep moving...</p>
           </div>
@@ -22,16 +22,16 @@
 
           <template v-for="year in years">
             <header class="timeline-header">
-              <span class="tag is-primary" :class="blog.color">{{year}}</span>
+              <span class="tag is-black" :class="filterColor(blog.color)">{{year}}</span>
             </header>
             <div class="timeline-item" v-for="(posts,month) in result[year]">
-              <div class="timeline-marker is-primary" :class="blog.color"></div>
+              <div class="timeline-marker is-black" :class="filterColor(blog.color)"></div>
               <div class="timeline-content">
                <p class="heading">{{month}}</p>
                 <template v-for="post in posts">
                   
                   <!-- <span class="tag is-light"> -->
-                    <router-link class="is-size-6-mobile" :class="getTextColor(blog.color)" :to="{ name: 'post',params:{postId:post.id, userName: userName} }">{{post.title}}</router-link> 
+                    <router-link class="is-size-6-mobile" :class="getTextColor(filterColor(blog.color))" :to="{ name: 'post',params:{postId:post.id, userName: userName} }">{{post.title}}</router-link> 
                   <br>
 <!--                   <router-link :to="{ name: 'post',params:{postId:post.id} }">
                     {{post.title}}
@@ -43,7 +43,7 @@
           </template>
 
             <header class="timeline-header">
-            <span class="tag is-primary" :class="blog.color">Start</span>
+            <span class="tag is-black" :class="filterColor(blog.color)">Start</span>
           </header>
         </div>
       </div>
@@ -105,6 +105,12 @@ import {mapState} from 'vuex';
       },
       getTextColor(color){
         return "has-text-"+color.split('-')[1];
+      },
+      filterColor(color){
+        if (color === "is-light")
+          return "is-dark";
+        else
+          return color;
       }
     },
     watch:{
