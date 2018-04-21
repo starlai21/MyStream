@@ -20,6 +20,7 @@ class CreateBlogsTable extends Migration
             $table->enum('color', ['is-primary', 'is-link','is-info','is-success','is-warning','is-danger','is-dark','is-light'])->default('is-primary');
             $table->string('slogan')->nullable();
             $table->integer('pagination')->default('6');
+            $table->boolean('activated')->default(false);
             $table->timestamps();
         });
     }

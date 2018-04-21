@@ -52,7 +52,9 @@
       	</div>
       </nav>
     </div>
-      <router-view></router-view>
+      
+        <router-view></router-view>
+      
 
   </section>
 
@@ -76,9 +78,10 @@
 	  padding: 3rem 0;
 	  line-height: 1.5;
 	}
+
 </style>
 <script type="text/javascript">
-import particles from 'particles.js';
+
 
 
 export default {
@@ -89,9 +92,6 @@ export default {
 		    burger.toggleClass('is-active');
 		    menu.toggleClass('is-active');
 		});
-    // particlesJS('particle', require('../../particlesjs-config.json'), function() {
-    //   console.log('callback - particles.js config loaded');
-    // });
 	}
 }
 

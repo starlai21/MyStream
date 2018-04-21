@@ -37,7 +37,7 @@
 							  </div>
 		
 							</nav>
-							
+							<hr>
 							<vue-markdown v-highlight :source="post.content"  :toc="true" toc-class="menu-list" toc-id="table" @toc-rendered="processAnchors" :toc-first-level="1" :toc-last-level="3"
 							 ></vue-markdown>
 							
@@ -90,10 +90,7 @@ import Header from './Header';
         	}
 		},
 		methods:{
-			markDown(content){
-				if(content)
-					return marked(content,{sanitize: true});
-			},
+
 			processAnchors(){
 				$("#table li a[href^='#']").on('click', (e) => {
 					e.preventDefault();
@@ -146,7 +143,6 @@ import Header from './Header';
 			}
 		},
 		created(){
-			console.log(this.postId+" " + this.userName);
 			this.isLoading = true;
 			Post.fetchPost(data => {
 				this.post = data;

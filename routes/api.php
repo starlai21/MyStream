@@ -40,10 +40,16 @@ Route::get('/blog','BlogController@index');
 
 
 
+
 //login & logout api
 Route::prefix('auth')->group(function($router) {
     $router->post('login', 'AuthController@login');
     $router->post('logout', 'AuthController@logout');
+    $router->post('register','AuthController@register');
+
+    $router->post('checkEmail','AuthController@checkEmail');
+    $router->post('checkUserName','AuthController@checkUserName');
+
 });
 
 

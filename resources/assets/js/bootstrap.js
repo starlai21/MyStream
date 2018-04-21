@@ -3,13 +3,14 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/solarized-light.css';
-import marked from 'marked';
+
 
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2';
 
 import Toasted from 'vue-toasted';
 
+import VeeValidate from 'vee-validate';
 
 
 
@@ -19,13 +20,13 @@ window.Swal = require('sweetalert2');
 
 
 
-window.marked = marked;
-
-
 
 window.Vue = Vue;
 Vue.use(Toasted);
 Vue.use(VueRouter);
+Vue.use(VeeValidate);
+
+
 var VueAffix = require('vue-affix');
 Vue.use(VueAffix);
 

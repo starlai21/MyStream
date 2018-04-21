@@ -2,51 +2,71 @@
 
     <div class="hero-body">
       <div class="container has-text-centered">
-        <div class="column is-4 is-offset-4">
-          <h3 class="title has-text-grey">My Stream - Sign Up</h3>
-          <p class="subtitle has-text-grey">A step away from creating your blog.</p>
-          <div class="box">
+        <div class="column is-6 is-offset-3">
+          <h3 class="title ">My Stream - Sign Up</h3>
+          <p class="subtitle">A step away from creating your blog.</p>
+          <div class="box has-text-left">
               <div class="field">
-                <div class="control has-icons-left">
-                  	<input class="input is-large" type="email" placeholder="Email" v-model="email" @input="clear">
-				            <span class="icon is-small is-left">
-				              <i class="fa fa-envelope"></i>
-				            </span>
-				            <p class="help is-danger" v-if="errors.email">{{errors.email[0]}}</p>
-                </div>
-              </div>
-              <div class="field">
-                <div class="control has-icons-left">
-                    <input class="input is-large" type="text" placeholder="Name" v-model="name" @input="clear">
+                <label class="label">Email</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input type="text"  name="email" v-model="email" v-validate="'required|email|email_unique'" data-vv-delay="1000" :class="{'input': true, 'is-danger': errors.has('email'), 'is-success': fields.email && fields.email.valid }">
                     <span class="icon is-small is-left">
                       <i class="fa fa-envelope"></i>
                     </span>
-                    <p class="help is-danger" v-if="errors.email">{{errors.email[0]}}</p>
-                </div>
-              </div>
-
-              <div class="field">
-                <div class="control has-icons-left">
-                   <input class="input is-large" type="password" placeholder="Password" v-model="password" @input = "clear" required>
-				          <span class="icon is-small is-left">
-				            <i class="fa fa-lock"></i>
-				          </span>
-				          <p class="help is-danger" v-if="errors.password">{{errors.password[0]}}</p>
+                    <span class="icon is-small is-right">
+                      <i v-show="errors.has('email')" class="fa fa-warning"></i>
+                    </span>
+                 
+                    <span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
+                    <span v-show="fields.email && fields.email.valid" class="help is-success">I'm available.</span>
                 </div>
               </div>
               <div class="field">
-                <div class="control has-icons-left">
-                   <input class="input is-large" type="password" placeholder="Password_confirmation" v-model="password_confirmation" @input = "clear" required>
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-lock"></i>
-                  </span>
-                  <p class="help is-danger" v-if="errors.password_confirmation">{{errors.password_confrmation[0]}}</p>
+                <label class="label">Username</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input type="text" placeholder="It cannot be changed." name="userName" v-model="userName" v-validate="'required|alpha_dash|username_unique'" data-vv-delay="1000" :class="{'input': true, 'is-danger': errors.has('userName'), 'is-success': fields.userName && fields.userName.valid }">
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-user"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                      <i v-show="errors.has('userName')" class="fa fa-warning"></i>
+                    </span>
+                    
+                    <span v-show="errors.has('userName')" class="help is-danger">{{ errors.first('userName') }}</span>
+                    <span v-show="fields.userName && fields.userName.valid" class="help is-success">I'm available.</span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Password</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input type="password" name="password" v-model="password" v-validate="{ is: password_confirmation , min: 6, max:20}" :class="{'input': true, 'is-danger': errors.has('password')}">
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-lock"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                      <i v-show="errors.has('password')" class="fa fa-warning"></i>
+                    </span>
+                    <span v-show="errors.has('password')" class="help is-danger">{{ errors.first('password') }}</span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Password confirmation</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="password" name="password_confirmation" v-model="password_confirmation" v-validate="{min: 6, max:20}">
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-lock"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                      <i v-show="errors.has('password_confirmation')" class="fa fa-warning"></i>
+                    </span>
+                    <span v-show="errors.has('password_confirmation')" class="help is-danger">{{ errors.first('password_confirmation') }}</span>
                 </div>
               </div>
 
-              <a class="button is-block is-primary is-large is-fullwidth" @click="login">Sign Up</a>
+              
+              <a class="button is-block is-primary is-fullwidth" @click="register">Sign Up</a>
           </div>
-          <p class="has-text-grey">
+          <p>
             <router-link :to="{name:'login'}">Login</router-link> &nbsp;·&nbsp;
             <a href="../">Forgot Password</a> 
           </p>
@@ -65,7 +85,7 @@
   box-shadow: none;
 }
 .box {
-  margin-top: 5rem;
+  margin-top: 1rem;
 }
 
 input {
@@ -79,30 +99,55 @@ p.subtitle {
 }
 </style>
 <script>
+import { Validator } from 'vee-validate';
 	export default {
 		data(){
 			return{
 				email:'',
 				password:'',
         password_confirmation:'',
-        name:'',
-				errors:[]
+        userName:''
 			};
 		},
 		methods:{
-			login(){
-				if (this.email && this.password)
-					axios.post('/api/auth/login',{email:this.email,password:this.password})
-						.then(response => {
-							this.$store.dispatch('logined',{token: response.data.token,userName: response.data.userName});
-						})
-						.catch(({response}) => {
-								this.errors = response.data.errors;
-							});
-			},
-			clear(){
-				this.errors = [];
+			register(){
+        this.$validator.validateAll().then((result) => {
+          if (result){
+            axios.post('/api/auth/register',{email: this.email, password: this.password, password_confirmation: this.password_confirmation, name: this.userName})
+                    .then(r => {
+                      console.log(r);
+                    })
+                    .catch(e => {
+                      console.log(e);
+                    });
+          }
+          else{
+            
+          }
+        });
 			}
-		}
+
+		},
+    created(){
+      Validator.extend('email_unique', {
+        getMessage: field => `The ${field} has been taken.`,
+        validate: value => axios.post('/api/auth/checkEmail',{email:value})
+                                  .then(r => {
+                                    return {
+                                      valid: r.data.valid
+                                    };
+                                  })
+      });
+      Validator.extend('username_unique', {
+        getMessage: field => `The ${field} has been taken.`,
+        validate: value => axios.post('/api/auth/checkUserName',{userName:value})
+                                  .then(r => {
+                                    return {
+                                      valid: r.data.valid
+                                    };
+                                  })
+      });
+
+    }
 	}
 </script>

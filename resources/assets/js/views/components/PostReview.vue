@@ -5,16 +5,18 @@
     	  	<router-link :to="{ name: 'post',params:{postId: post.id, userName: userName} }">
     	    	{{post.title}} <span class="tag is-light">{{postOn(post)}}</span>
     	  	</router-link>
-    	</p>          
+    	</p>
+
     	<div class="control">
     		<tags :tags="post.tags" :tagName="tagName" @tagUpdated="tagUpdateHandler"></tags>
     	</div>
-    	<p class="subtitle" v-html="markDown(post.abstract)" v-highlight></p>
+        <vue-markdown v-highlight :source="post.abstract" v-if="post.abstract"></vue-markdown>
 	</article>
 </template>
 <script>
 import moment from 'moment';
 import Tag from './Tag';
+import VueMarkdown from 'vue-markdown';
 	export default {
 
 	props:['post','tagName','userName'],
@@ -25,14 +27,11 @@ import Tag from './Tag';
             },
         tagUpdateHandler(tag){
             this.$emit('tagUpdated',tag);
-        },
-        markDown(content){
-            if (content)
-                return marked(content);
         }
 	},
 	components:{
-		'tags':Tag
+		'tags':Tag,
+        VueMarkdown
 	}
 }	
 </script>
