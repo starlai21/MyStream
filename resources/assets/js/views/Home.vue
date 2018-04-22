@@ -89,9 +89,15 @@ export default {
 		var burger = $('.burger');
 		var menu = $('#'+burger.data('target'));
 		burger.on('click', function() {
-		    burger.toggleClass('is-active');
-		    menu.toggleClass('is-active');
+		  burger.toggleClass('is-active');
+		  menu.toggleClass('is-active');
 		});
+    var items = $('.navbar-item');
+    items.on('click', function(){
+      burger.toggleClass('is-active');
+      menu.toggleClass('is-active');
+    })
+
 	}
 }
 

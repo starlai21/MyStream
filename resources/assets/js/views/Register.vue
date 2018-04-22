@@ -18,7 +18,7 @@
                     </span>
                  
                     <span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
-                    <span v-show="fields.email && fields.email.valid" class="help is-success">I'm available.</span>
+                    <span v-show="!errors.has('email') && fields.email && fields.email.valid" class="help is-success">I'm available.</span>
                 </div>
               </div>
               <div class="field">
@@ -33,7 +33,7 @@
                     </span>
                     
                     <span v-show="errors.has('userName')" class="help is-danger">{{ errors.first('userName') }}</span>
-                    <span v-show="fields.userName && fields.userName.valid" class="help is-success">I'm available.</span>
+                    <span v-show="!errors.has('userName') && fields.userName && fields.userName.valid" class="help is-success">I'm available.</span>
                 </div>
               </div>
               <div class="field">
@@ -99,7 +99,9 @@ p.subtitle {
 }
 </style>
 <script>
+import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
+
 	export default {
 		data(){
 			return{
@@ -109,16 +111,28 @@ import { Validator } from 'vee-validate';
         userName:''
 			};
 		},
+    components:{
+      VeeValidate
+    },
 		methods:{
 			register(){
         this.$validator.validateAll().then((result) => {
           if (result){
             axios.post('/api/auth/register',{email: this.email, password: this.password, password_confirmation: this.password_confirmation, name: this.userName})
                     .then(r => {
-                      console.log(r);
+                      Swal({
+                        type:'success',
+                        title:'The activation link has been sent to your email.'
+                      });
+                      this.$router.push({name:'login'});
                     })
                     .catch(e => {
                       console.log(e);
+                      // this.errors.add('email','it is wrong');
+                      Swal({
+                        type: 'error',
+                        title: 'Something went wrong.'
+                      });
                     });
           }
           else{
@@ -147,7 +161,6 @@ import { Validator } from 'vee-validate';
                                     };
                                   })
       });
-
     }
 	}
 </script>

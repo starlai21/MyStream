@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 
 import Toasted from 'vue-toasted';
 
-import VeeValidate from 'vee-validate';
+// import VeeValidate from 'vee-validate';
 
 
 
@@ -24,7 +24,7 @@ window.Swal = require('sweetalert2');
 window.Vue = Vue;
 Vue.use(Toasted);
 Vue.use(VueRouter);
-Vue.use(VeeValidate);
+// Vue.use(VeeValidate);
 
 
 var VueAffix = require('vue-affix');

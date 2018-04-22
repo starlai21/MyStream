@@ -46,9 +46,6 @@ export default new Vuex.Store({
             state.token = null;
 
         },
-        [types.TITLE]: (state, data) => {
-            state.title = data;
-        },
         [types.REFRESH_TOKEN]: (state, data) => {
             localStorage.token = data;
             state.token = data;

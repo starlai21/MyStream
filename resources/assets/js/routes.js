@@ -43,6 +43,36 @@ let routes = [
                 path:'',
                 name:'root',
                 component: require('./views/Root.vue')
+            },
+            {
+                path: 'activation/:activation_code',
+                name: 'activation',
+                component: require('./views/Activation.vue'),
+                beforeEnter: (to, from, next) => {
+                   axios.post('/api/auth/activateUser',{activation_code: to.params.activation_code})
+                            .then(response=> {
+                                Swal({
+                                    type: response.data.status,
+                                    title: response.data.message
+                                });
+                                if (response.data.status === 'success'){
+                                    store.dispatch('logined', {
+                                        token: response.data.token,
+                                        userName: response.data.userName
+                                    });
+                                }
+                                else{
+                                    next({name:'root'});
+                                }
+                            })
+                            .catch(e => {
+                                Swal({
+                                    type:'error',
+                                    title: 'Whoops! something went wrong.'
+                                });
+                                next({name:'root'});
+                            });
+                }
             }
         ]
     },

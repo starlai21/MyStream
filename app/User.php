@@ -16,7 +16,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','activation_code', 'activated'
     ];
 
     /**
@@ -33,6 +33,10 @@ class User extends Authenticatable implements JWTSubject
 
     public static function exists($userName){
         return static::where('name', $userName)->exists();
+    }
+
+    public static function activated($userName){
+        return static::where('name', $userName)->first()->activated;
     }
 
     public function posts(){

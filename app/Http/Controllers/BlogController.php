@@ -32,7 +32,7 @@ class BlogController extends Controller
 
     public function index(){
 		$userName = request()->input('userName');
-		if (!User::exists($userName)) {
+		if (!User::exists($userName) || !User::activated($userName)) {
 			abort(404);
 	    }
 	    $user = User::where('name',$userName)->first();

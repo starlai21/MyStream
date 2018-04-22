@@ -72,6 +72,7 @@ p.subtitle {
 }
 </style>
 <script>
+import VeeValidate from 'vee-validate';
 	export default {
 		data(){
 			return{
@@ -87,7 +88,14 @@ p.subtitle {
             if (result){
               axios.post('/api/auth/login',{email:this.email,password:this.password})
                       .then(response => {
-                        this.$store.dispatch('logined',{token: response.data.token,userName: response.data.userName});
+                        if (response.data.status === 'success')
+                          this.$store.dispatch('logined',{token: response.data.token,userName: response.data.userName});
+                        else{
+                          Swal({
+                            type: response.data.status,
+                            title: response.data.message
+                          });
+                        }
                       })
                       .catch(({response}) => {
                           this.login_errors = response.data.errors;
@@ -99,6 +107,9 @@ p.subtitle {
 			clear(){
 				this.login_errors = [];
 			}
-		}
+		},
+    components:{
+      VeeValidate
+    }
 	}
 </script>

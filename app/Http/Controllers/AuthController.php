@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Blog;
+use App\Notifications\UserRegisteredSuccessfully;
 use App\Transformers\UserTransformer;
 use App\User;
 use Illuminate\Http\Request;
@@ -19,13 +21,30 @@ class AuthController extends Controller
 
         $params['activation_code'] = str_random(30).time();
         $params['password'] = Hash::make($params['password']);
-        return $params;
-        $user = User::create($params);
 
+        $user = User::create($params);
+        $user->notify(new UserRegisteredSuccessfully($user));
+        return ['status' => 'success'];
     }
 
 
+    public function activateUser(){
+        $user = User::where('activation_code', request()->input('activation_code'))->first();
+        if (!$user) {
+            return ['message' => 'The activation code is invalid.',
+                    'status'  => 'error'];
+        }
+        $user->activated = true;
+        $user->activation_code = null;
+        Blog::create(['user_id' => $user->id, 'name' => $user->name]);
+        $user->save();
+        $token = auth()->login($user);
+        return ['token' => 'Bearer ' . $token,
+                'userName' => $user->name,
+                'status' => 'success',
+                'message' => 'Activated'];
 
+    }
 
 
     /**
@@ -49,14 +68,26 @@ class AuthController extends Controller
         // 验证参数，如果验证失败，则会抛出 ValidationException 的异常
         $params = $this->validate($request, $rules);
 
-       // 使用 Auth 登录用户，如果登录成功，则返回 201 的 code 和 token，如果登录失败则返回
-        return ($token = Auth::guard('api')->attempt($params))
-            ? response(['token'     => 'Bearer ' . $token,
-                        'userName'  => User::where('email',$params['email'])->first()->name], 201)
-            : response(['errors' => [  'email' => ['Email or password is invalid'],
-                                       'password' => ['Email or password is invalid'] 
-                                   ]
-                                ], 400);
+        $token = Auth::guard('api')->attempt($params);
+        if ($token){
+            $user = User::where('email',$params['email'])->first();
+            if (!$user->activated){
+                return response(['status' => 'error',
+                                'message' => 'Your account has not been activated.']);
+            }
+            else{
+                return response(['token'     => 'Bearer ' . $token,
+                                'userName'  => $user->name,
+                                'status'  => 'success'], 201);
+            }
+        }
+        else{
+            return response(['errors' => [  
+                                'email'     => ['Email or password is invalid'],
+                                'password'  => ['Email or password is invalid'] 
+                            ]
+                        ], 400);
+        }
     }
 
     /**

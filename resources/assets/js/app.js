@@ -64,9 +64,5 @@ if (window.localStorage.getItem('token')) {
 new Vue({
     el: '#app',
     router,
-    store,
-    data:{
-
-    }
-
+    store
 });
