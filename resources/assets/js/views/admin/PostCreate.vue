@@ -11,7 +11,7 @@
 				  <div class="control">
 				    <input class="input" type="text" v-model="title" @input="clearError('title')">
 				  </div>
-				  <p class="help is-danger" v-if="errors.title">{{errors.title[0]}}</p>
+				  <p class="help is-danger" v-if="errors_.title">{{errors_.title[0]}}</p>
 				</div>
 
 				<div class="field">
@@ -32,8 +32,9 @@
 				  <label class="label">Content</label>
 				  <div class="control">
 				    <textarea class="textarea" v-model="content" @input="clearError('content')"></textarea>
+					
 				  </div>
-				  <p class="help is-danger" v-if="errors.content">{{errors.content[0]}}</p>
+				  <p class="help is-danger" v-if="errors_.content">{{errors_.content[0]}}</p>
 				</div>
 				<div class="field">
 					<a class="button is-primary" @click="Post">Post</a>
@@ -54,7 +55,7 @@ import Post from '../../models/Post.js';
 				abstract: '',
 				tags: [],
 				content: '',
-				errors:[]
+				errors_:[]
 			};
 		},
 		created(){
@@ -92,7 +93,7 @@ import Post from '../../models/Post.js';
 								  type:'error',
 			                      title: 'Failed to update.'
 			                });
-			                this.errors = e.response.data.errors; 
+			                this.errors_ = e.response.data.errors; 
 						});
 
 			},
@@ -101,11 +102,11 @@ import Post from '../../models/Post.js';
 				this.abstract = '';
 				this.tags = [];
 				this.content = '';
-				this.errors = [];
+				this.errors_ = [];
 			},
 			clearError(prop){
-				if(this.errors.hasOwnProperty(prop))
-					this.errors[prop] = null;
+				if(this.errors_.hasOwnProperty(prop))
+					this.errors_[prop] = null;
 			}
 		}
 

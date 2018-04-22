@@ -47,6 +47,9 @@ Route::prefix('auth')->group(function($router) {
     $router->post('logout', 'AuthController@logout');
     $router->post('register','AuthController@register');
     $router->post('activateUser','AuthController@activateUser');
+    $router->post('forgotPassword','AuthController@forgotPassword');
+    $router->post('resetPassword','AuthController@resetPassword');
+
 
     $router->post('checkEmail','AuthController@checkEmail');
     $router->post('checkUserName','AuthController@checkUserName');

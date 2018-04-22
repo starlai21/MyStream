@@ -59,7 +59,7 @@
                 <span class="icon">
                   <i class="fa fa-sign-out"></i>
                 </span>
-                <span>Logout</span>
+                <span>Sign Out</span>
               </a>
             </span>
 
@@ -110,6 +110,14 @@
 
 </section>
 </template>
+
+<style type="text/css">
+  .has-bg-img { 
+    background: url('/images/avatar.jpg') center center; 
+    background-size: cover; 
+  }
+</style>
+
 <script type="text/javascript">
 import {mapState} from 'vuex';
 	export default {

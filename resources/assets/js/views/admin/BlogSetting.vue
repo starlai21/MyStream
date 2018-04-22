@@ -7,7 +7,7 @@
 				  <div class="control">
 				    <input class="input" type="text" v-model="blog.name" @input="clearError('name')">
 				  </div>
-				  <p class="help is-danger" v-if="errors.name">{{errors.name[0]}}</p>
+				  <p class="help is-danger" v-if="errors_.name">{{errors_.name[0]}}</p>
 				</div>
 
 				<div class="field">
@@ -88,7 +88,7 @@ export default {
 				'is-warning': 'hsl(48, 100%, 67%)',
 				'is-danger': 'hsl(348, 100%, 61%)'
 			},
-			errors: []
+			errors_: []
 		};
 	},
 	computed: mapState({
@@ -96,7 +96,7 @@ export default {
     }),
     methods:{
     	clearError(field){
-    		this.errors[field] = '';
+    		this.errors_[field] = '';
     	},
     	save(){
     		axios.post('/api/blog/update', {name: this.blog.name, 
@@ -120,7 +120,7 @@ export default {
 							type:'error',
 				            title: 'Something went wrong.'
 				        });
-    					this.errors = e.response.data.errors;
+    					this.errors_ = e.response.data.errors;
     				});
     	}
     }

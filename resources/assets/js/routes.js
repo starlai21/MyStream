@@ -26,28 +26,28 @@ let routes = [
 
     {
         path:'/',
-        component: require('./views/Home.vue'),
+        component: require('./views/home/Home.vue'),
         children: [
             {
                 path:'login',
                 name:'login',
-                component: require('./views/Login.vue')
+                component: require('./views/home/Login.vue')
             },      
 
             {
                 path:'register',
                 name: 'register',
-                component: require('./views/Register.vue')
+                component: require('./views/home/Register.vue')
             },
             {
                 path:'',
                 name:'root',
-                component: require('./views/Root.vue')
+                component: require('./views/home/Root.vue')
             },
             {
                 path: 'activation/:activation_code',
                 name: 'activation',
-                component: require('./views/Activation.vue'),
+                component: require('./views/home/Activation.vue'),
                 beforeEnter: (to, from, next) => {
                    axios.post('/api/auth/activateUser',{activation_code: to.params.activation_code})
                             .then(response=> {
@@ -73,6 +73,17 @@ let routes = [
                                 next({name:'root'});
                             });
                 }
+            },
+            {
+                path: 'forgotPassword',
+                name: 'forgotPassword',
+                component: require('./views/home/ForgotPassword.vue')
+            },
+            {
+                path: 'resetPassword/:code',
+                name: 'resetPassword',
+                component: require('./views/home/ResetPassword.vue'),
+                props: true
             }
         ]
     },

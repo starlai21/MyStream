@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Blog;
+use App\Notifications\UserPasswordReset;
 use App\Notifications\UserRegisteredSuccessfully;
 use App\Transformers\UserTransformer;
 use App\User;
@@ -46,6 +47,39 @@ class AuthController extends Controller
 
     }
 
+    public function forgotPassword(){
+        $param = request()->validate(['email' => 'required | email']);
+        $user = User::where('email',$param['email'])->first();
+        if(!$user){
+            return ['message' => 'The email is invalid.',
+                    'status'  => 'error'];
+        }
+        else{
+            $user->password_reset_code = str_random(30).time();
+            $user->save();
+            $user->notify(new UserPasswordReset($user));
+            return ['message' => 'Please check your email box.',
+                    'status'  => 'success'];
+        }
+    }
+
+    public function resetPassword(){
+        $user = User::where('password_reset_code', request()->input('password_reset_code'))
+                        ->first();
+        if (!$user) {
+            return ['message' => 'The password reset code is invalid.',
+                    'status'  => 'error'];
+        }
+        else{
+            $param = request()->validate(['password' => 'required | max:20 | min:6|confirmed']);
+            $param['password'] = Hash::make($param['password']);
+            $user->update($param);
+            $user->password_reset_code = null;
+            return ['message' => 'Your password has been reset.',
+                    'status'  => 'success'];
+
+        }
+    }
 
     /**
      * Get a JWT token via given credentials.
