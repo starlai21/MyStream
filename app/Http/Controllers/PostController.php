@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
+    public function user(){
+        return User::where('name',request('userName'))->first();
+    }
+
+    public function isAdmin($user){
+        return Auth::user() && (Auth::user() == $user);
+    }
 
     public function checkLogined(){
         if (!Auth::user())
@@ -26,6 +33,25 @@ class PostController extends Controller
                     ->json(['status' => 'error',
                             'message' => 'Permission denied.']);
     }
+
+
+    public function toggle(Post $post){
+        if($post){
+            $this->checkAuthor($post);
+            $post['posted'] = !$post['posted'];
+            $post->save();
+            return response()
+                        ->json(['status' => 'success',
+                                'message' => 'Post status changed.']);
+        }
+        else{
+            return response()
+                        ->json(['status' => 'error',
+                                'message' => 'No such post.']);
+        }
+    }
+
+
     public function index(){
         //sleep(1);
     	if (($postId = request()->input('postId')) != null){
@@ -34,22 +60,21 @@ class PostController extends Controller
                                 $q->where('name',request()->input('userName'));
                             })
                             ->findOrFail($postId);
+            // in draft state.
+            if (!$post->posted){
+                if (Auth::user() && Auth::user() == $post->user)
+                    return $post;
+                return null;
+            }
             return $post;
-    		
     	}
     	else{
-            if (request('userName')){
-                if (!User::where('name', '=', request('userName'))->exists()) {
-                    return response()
-                            ->json(['status' => 'error',
-                                    'message' => 'There is no such blog.']);
-                }
-            }
-
             $posts = Post::latest();
             if ($request = request(['month','year','tag','userName'])){
                 $posts->filter($request);
             }
+            if (!$this->isAdmin($this->user()))
+                $posts = $posts->where('posted',true);
             $pagination = request('paginate');
             if ($pagination == 'false'){
                 return $posts->with('tags:name')->get();
@@ -63,22 +88,26 @@ class PostController extends Controller
 
 
     public function archives(){
-        return Post::archives(request('userName'));
+        $user = $this->user();
+        return Post::archives($user->name,$this->isAdmin($user));
     }
 
     public function tags(){
         // return Tag::whereHas('posts')
         //             ->withCount('posts')->get();
-        
         //needs to be improved. 
-        $user = User::where('name',request('userName'))->first();
-        return DB::table('posts')
+        $user = $this->user();
+
+       $query = DB::table('posts')
                     ->join('post_tag','posts.id','=','post_tag.post_id')
                     ->join('tags','post_tag.tag_id','=','tags.id')
                     ->select('tags.name')
                     ->distinct()
-                    ->where('posts.user_id','=',$user->id)
-                    ->get();
+                    ->where('posts.user_id','=',$user->id);
+        if (!$this->isAdmin($user))
+            $query = $query->where('posted',true);
+
+        return $query->get();
     }
 
 
@@ -86,7 +115,7 @@ class PostController extends Controller
     public function store(Request $request){
 
         $this->checkLogined();
-        $params = $request->validate(['title' => 'required','abstract'=>'nullable','content'=>'required']);
+        $params = $request->validate(['title' => 'required','abstract'=>'nullable','content'=>'required', 'posted' => 'required']);
 
         $tagNames = $request->validate(['tags' => 'nullable']);
 

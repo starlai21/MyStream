@@ -4,24 +4,16 @@
 		<!-- modal create post begin -->
 		<div class="modal" :class="{'is-active':isCreateActive}">
 		  <div class="modal-background"></div>
-		  <div class="modal-card">
-		    <div class="box">
-		    	<post-create @posted="postCreated"></post-create>
-			</div>
-		  </div>
-		  <button class="modal-close is-large" aria-label="close"  @click="isCreateActive = !isCreateActive"></button>
+		  <post-create @posted="postCreated"></post-create>
+		  <button class="modal-close is-large" aria-label="close"  @click="createModalClose"></button>
 		</div>
 		<!-- modal end -->
 
-		<!-- modal create post begin -->
+		<!-- modal edit post begin -->
 		<div class="modal" :class="{'is-active':isEditActive}">
 		  <div class="modal-background"></div>
-		  <div class="modal-card">
-		    <div class="box">
-		    	<post-edit :post="postEdited" @updated="postUpdated"></post-edit>
-			</div>
-		  </div>
-		  <button class="modal-close is-large" aria-label="close"  @click="isEditActive = !isEditActive"></button>
+		  <post-edit :post="postEdited" @updated="postUpdated"></post-edit>
+		  <button class="modal-close is-large" aria-label="close"  @click="editModalClose"></button>
 		</div>
 		<!-- modal end -->
 		<fingerprint-spinner v-if="isLoading"
@@ -33,9 +25,9 @@
 		/>
 		<div v-else>
 			<div class="columns">
-				<div class="column is-four-fifths">
-					
-					<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+				<div class="column is-four-fifths ">
+					<div class="is-responsive">
+					<table class="table is-bordered is-narrow is-hoverable is-fullwidth">
 					  <thead>
 
 					    <tr>
@@ -46,13 +38,16 @@
 					  </thead>
 					  <tbody>
 					  	<tr v-for="post in posts">
-					  		<th>{{post.title}}</th>
+					  		<th :class="{ 'has-text-success': post.posted == '1'}">{{post.title}}</th>
 					  		<th>{{post.created_at|postOn}}</th>
 					  		<th>
 					  			<button class="button is-primary" @click="activateEdit(post)">
 					  				<i class="fa fa-edit" style="font-size:20px"></i>
 					  			</button>
-
+								<button class="button is-warning" @click="togglePostStatus(post.id,post.posted)">
+									<i class="fa fa-eye" style="font-size:20px" v-if="post.posted === '0'"></i>
+									<i class="fa fa-eye-slash" style="font-size:20px" v-else></i>
+								</button>
 								<button class="button is-danger" @click="deletePost(post.id)">
 									<i class="fa fa-trash" style="font-size:24px"></i>
 								</button>
@@ -60,6 +55,7 @@
 					  	</tr>
 					  </tbody>
 					</table>
+				</div>
 					
 				</div>
 
@@ -92,8 +88,11 @@
 
 	</div>
 </template>
-
-
+<style>
+	.is-responsive{
+		overflow-x: auto;
+	}
+</style>
 <script>
 
 import PostsMixin from '../../mixins/PostsMixin.js';
@@ -124,6 +123,26 @@ import {mapState} from 'vuex';
             }
 		},
 		methods:{
+			togglePostStatus(postId,status){
+			  	axios.post(`/api/post/${postId}/toggle`)
+						.then(r => {
+							Swal({
+								  type:'success',
+			                      title: status === '1' ? 'The post is in draft state now.':'The post is published!'
+			                });
+			          //       const index = this.posts.findIndex(item => item.id === postId);
+			        		// this.$set(this.posts[index], 'posted', !status);
+			                
+							this.$store.commit('notify');
+						})
+						.catch(e => {
+							console.log(e);
+							Swal({
+								  type:'error',
+			                      title: 'Failed to change the status.'
+			                });
+						});
+			},
 			deletePost(postId){
 				Swal({
 					  title: 'Are you sure?',
@@ -141,8 +160,8 @@ import {mapState} from 'vuex';
 										  type:'success',
 					                      title: 'Post deleted!'
 					                });
-					                this.posts = this.posts
-									  				.filter(e => e.id != postId);
+					          //       this.posts = this.posts
+									  				// .filter(e => e.id != postId);
 									this.$store.commit('notify');
 								})
 								.catch(e => {
@@ -161,12 +180,42 @@ import {mapState} from 'vuex';
 			},
 			postCreated(post){
 				this.isCreateActive = !this.isCreateActive;
-				// this.posts.unshift(post);
 				this.$store.commit('notify');
 			},
 			postUpdated(){
 				this.isEditActive = !this.isEditActive;
 				this.$store.commit('notify');
+			},
+			createModalClose(){
+				Swal({
+					  title: 'Are you sure to leave?',
+					  text: "You have not save the post yet!",
+					  type: 'warning',
+					  showCancelButton: true,
+					  confirmButtonColor: '#3085d6',
+					  cancelButtonColor: '#d33',
+					  confirmButtonText: 'Yes, I wanna leave!'
+					}).then((result) => {
+					  if (result.value) {
+					  	this.isCreateActive = !this.isCreateActive;
+					  }
+				});
+				
+			},
+			editModalClose(){
+				Swal({
+					  title: 'Are you sure to leave?',
+					  text: "You have not save the change yet!",
+					  type: 'warning',
+					  showCancelButton: true,
+					  confirmButtonColor: '#3085d6',
+					  cancelButtonColor: '#d33',
+					  confirmButtonText: 'Yes, I wanna leave!'
+					}).then((result) => {
+					  if (result.value) {
+					  	this.isEditActive = !this.isEditActive;
+					  }
+				});
 			}
 		}
 	}

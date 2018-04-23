@@ -1,6 +1,12 @@
 @import "~font-awesome/scss/font-awesome.scss";
+
+@import "~bulma/sass/utilities/_all";
+
+$modal-content-width:1200px;
+
 @import "~bulma/bulma.sass";
 @import '~bulma-timeline';
-// @import "~bulma";
+
+
 
 

@@ -19,6 +19,7 @@ class CreatePostsTable extends Migration
             $table->text('abstract')->nullable();
             $table->string('title');
             $table->text('content');
+            $table->boolean('posted');
             $table->timestamps();
         });
     }

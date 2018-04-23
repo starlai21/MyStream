@@ -2,7 +2,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import hljs from 'highlight.js';
-import 'highlight.js/styles/solarized-light.css';
+
 
 
 // ES6 Modules or TypeScript
@@ -12,6 +12,9 @@ import Toasted from 'vue-toasted';
 
 import VeeValidate from 'vee-validate';
 
+import mavonEditor from 'mavon-editor';
+import 'mavon-editor/dist/css/index.css';
+import 'highlight.js/styles/solarized-light.css';
 
 
 
@@ -26,6 +29,7 @@ Vue.use(Toasted);
 Vue.use(VueRouter);
 Vue.use(VeeValidate);
 
+Vue.use(mavonEditor);
 
 var VueAffix = require('vue-affix');
 Vue.use(VueAffix);

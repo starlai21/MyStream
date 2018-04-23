@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     
-	protected $fillable = ['title','content','abstract','user_id'];
+	protected $fillable = ['title','content','abstract','user_id','posted'];
     protected $hidden = ['user_id'];
 
  //    public function user(){
@@ -40,7 +40,7 @@ class Post extends Model
 
 
     }
-    public static function archives($userName){
+    public static function archives($userName,$isAdmin){
     	// mysql
         // return static::selectRaw('year(created_at) year, monthname(created_at) month,count(*) published')
         //     ->groupBy('year','month')
@@ -49,14 +49,17 @@ class Post extends Model
         //     ->toArray();
 
         //sqlite
-        return static::selectRaw("strftime('%Y',created_at) year, 
+        $query = static::selectRaw("strftime('%Y',created_at) year, 
         						strftime('%m',created_at) month,
         						count(*) published")
                         ->whereHas('user', function($q) use($userName){
                             $q->where('name',$userName);
-                        })
-        				->groupBy('year','month')
-        				->orderByRaw('min(created_at) desc')
+                        });
+        if (!$isAdmin)
+            $query = $query->where('posted',true);
+
+        return  $query->groupBy('year','month')
+        			    ->orderByRaw('min(created_at) desc')
         				->get()
         				->toArray();
     }
