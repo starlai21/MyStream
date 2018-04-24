@@ -43,7 +43,7 @@ class Post extends Model
     }
     public static function archives($userName,$isAdmin){
 
-        if (App::environment('APP_ENV') == 'production'){
+        if (App::environment() == 'production'){
             // mysql
              $query = static::selectRaw('year(created_at) year, monthname(created_at) month,count(*) published')
                     ->whereHas('user', function($q) use($userName){
