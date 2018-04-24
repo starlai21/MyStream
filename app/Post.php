@@ -45,7 +45,7 @@ class Post extends Model
 
         if (App::environment() == 'production'){
             // mysql
-             $query = static::selectRaw('year(created_at) year, monthname(created_at) month,count(*) published')
+             $query = static::selectRaw('year(created_at) year, month(created_at) month,count(*) published')
                     ->whereHas('user', function($q) use($userName){
                             $q->where('name',$userName);
                         });
