@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 
 class Post extends Model
 {
@@ -41,27 +42,40 @@ class Post extends Model
 
     }
     public static function archives($userName,$isAdmin){
-    	// mysql
-        // return static::selectRaw('year(created_at) year, monthname(created_at) month,count(*) published')
-        //     ->groupBy('year','month')
-        //     ->orderByRaw('min(created_at) desc')
-        //     ->get()
-        //     ->toArray();
 
-        //sqlite
-        $query = static::selectRaw("strftime('%Y',created_at) year, 
-        						strftime('%m',created_at) month,
-        						count(*) published")
-                        ->whereHas('user', function($q) use($userName){
+        if (App::environment('APP_ENV') == 'production'){
+            // mysql
+             $query = static::selectRaw('year(created_at) year, monthname(created_at) month,count(*) published')
+                    ->whereHas('user', function($q) use($userName){
                             $q->where('name',$userName);
                         });
-        if (!$isAdmin)
-            $query = $query->where('posted',true);
+            if (!isAmdin)
+                $query = $query->where('posted',true);
+            return $query->groupBy('year','month')
+                            ->orderByRaw('min(created_at) desc')
+                            ->get()
+                            ->toArray();
+        }
+        else{
+            //sqlite
+            $query = static::selectRaw("strftime('%Y',created_at) year, 
+                                    strftime('%m',created_at) month,
+                                    count(*) published")
+                            ->whereHas('user', function($q) use($userName){
+                                $q->where('name',$userName);
+                            });
+            if (!$isAdmin)
+                $query = $query->where('posted',true);  
 
-        return  $query->groupBy('year','month')
-        			    ->orderByRaw('min(created_at) desc')
-        				->get()
-        				->toArray();
+            return  $query->groupBy('year','month')
+                            ->orderByRaw('min(created_at) desc')
+                            ->get()
+                            ->toArray();
+
+        }
+        
+
+
     }
 
 
