@@ -49,7 +49,7 @@ class Post extends Model
                     ->whereHas('user', function($q) use($userName){
                             $q->where('name',$userName);
                         });
-            if (!$isAmdin)
+            if (!$isAdmin)
                 $query = $query->where('posted',true);
             return $query->groupBy('year','month')
                             ->orderByRaw('min(created_at) desc')
