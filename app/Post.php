@@ -43,36 +43,34 @@ class Post extends Model
     }
     public static function archives($userName,$isAdmin){
 
-        if (App::environment() == 'production'){
-            // mysql
-             $query = static::selectRaw('year(created_at) year, month(created_at) month,count(*) published')
+        // mysql
+        $query = static::selectRaw('year(created_at) year, month(created_at) month,count(*) published')
                     ->whereHas('user', function($q) use($userName){
                             $q->where('name',$userName);
                         });
-            if (!$isAdmin)
-                $query = $query->where('posted',true);
-            return $query->groupBy('year','month')
-                            ->orderByRaw('min(created_at) desc')
-                            ->get()
-                            ->toArray();
-        }
-        else{
+        if (!$isAdmin)
+            $query = $query->where('posted',true);
+        return $query->groupBy('year','month')
+                        ->orderByRaw('min(created_at) desc')
+                        ->get()
+                        ->toArray();
+
             //sqlite
-            $query = static::selectRaw("strftime('%Y',created_at) year, 
-                                    strftime('%m',created_at) month,
-                                    count(*) published")
-                            ->whereHas('user', function($q) use($userName){
-                                $q->where('name',$userName);
-                            });
-            if (!$isAdmin)
-                $query = $query->where('posted',true);  
+            // $query = static::selectRaw("strftime('%Y',created_at) year, 
+            //                         strftime('%m',created_at) month,
+            //                         count(*) published")
+            //                 ->whereHas('user', function($q) use($userName){
+            //                     $q->where('name',$userName);
+            //                 });
+            // if (!$isAdmin)
+            //     $query = $query->where('posted',true);  
 
-            return  $query->groupBy('year','month')
-                            ->orderByRaw('min(created_at) desc')
-                            ->get()
-                            ->toArray();
+            // return  $query->groupBy('year','month')
+            //                 ->orderByRaw('min(created_at) desc')
+            //                 ->get()
+            //                 ->toArray();
 
-        }
+        
         
 
 
