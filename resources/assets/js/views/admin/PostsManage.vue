@@ -45,7 +45,7 @@
 					  				<i class="fa fa-edit" style="font-size:20px"></i>
 					  			</button>
 								<button class="button is-warning" @click="togglePostStatus(post.id,post.posted)">
-									<i class="fa fa-eye" style="font-size:20px" v-if="post.posted === '0'"></i>
+									<i class="fa fa-eye" style="font-size:20px" v-if="post.posted === 0"></i>
 									<i class="fa fa-eye-slash" style="font-size:20px" v-else></i>
 								</button>
 								<button class="button is-danger" @click="deletePost(post.id)">
@@ -128,7 +128,7 @@ import {mapState} from 'vuex';
 						.then(r => {
 							Swal({
 								  type:'success',
-			                      title: status === '1' ? 'The post is in draft state now.':'The post is published!'
+			                      title: status === 1 ? 'The post is in draft state now.':'The post is published!'
 			                });
 			          //       const index = this.posts.findIndex(item => item.id === postId);
 			        		// this.$set(this.posts[index], 'posted', !status);
