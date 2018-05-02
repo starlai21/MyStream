@@ -27,22 +27,43 @@
 						  	<h1 class="has-text-centered">{{post.title}}</h1>
 		
 						  	<nav class="level">
-							  <div class="level-item  has-text-centered">
-							  	<tag :tags="post.tags"></tag>
+							  <div class="level-left">
+							  	<div class="level-item">
+							  		<tag :tags="post.tags"></tag>	
+							  	</div>
 							  </div>
 							 
-							  <div class="level-item  has-text-centered">
-							  	<span class="tag is-light">{{post.created_at | postOn}}</span>
-							  	<span class="tag is-primary">{{post.user && post.user.name}}</span>
+							  <div class="level-right">
+							  	<div class="level-item">
+							  		<span class="tag is-light">{{post.created_at | postOn}}</span>
+							  		<span class="tag is-primary">{{post.user && post.user.name}}</span>
+							  	</div>
 							  </div>
 		
 							</nav>
 							<hr>
-							<vue-markdown v-highlight :source="post.content"  :toc="true" toc-class="menu-list" toc-id="table" @toc-rendered="processAnchors" :toc-first-level="1" :toc-last-level="3"
+							<vue-markdown v-highlight :source="content"  :toc="true" toc-class="menu-list" toc-id="table" @toc-rendered="processAnchors" :toc-first-level="1" :toc-last-level="3"
 							 ></vue-markdown>
 							
 						  	<!-- <div v-html="markDown(post.content)" v-highlight></div> -->
 						</div>
+						<hr>
+					  	<nav class="level">
+						  <div class="level-left">
+						  	<div class="level-item">
+							  	<router-link v-if="prev" :to="{ name: 'post',params:{postId: prev.id, userName: userName} }">
+					    	    	< {{prev.title}}
+					    	  	</router-link>
+						  	</div>
+						  </div>
+						  <div class="level-right">
+						  	<div class="level-item">
+							  	<router-link v-if="next" :to="{ name: 'post',params:{postId: next.id, userName: userName} }">
+					    	    	{{next.title}} >
+					    	  	</router-link>
+						  	</div>
+						  </div>
+						</nav>
 						<div id="gitalk-container"></div>
 					</div>
 				</div>
@@ -57,6 +78,7 @@
 			</div>
 		</div>
 	</section>
+	<blog-footer></blog-footer>
 </div>
 
 </template>
@@ -80,7 +102,10 @@ import Header from './Header';
 		data(){
 			return {
 				isLoading: false,
-				post:[]
+				post: [],
+				prev: null,
+				next: null,
+				content: ''
 			};
 		},
 		filters:{
@@ -90,8 +115,25 @@ import Header from './Header';
         	}
 		},
 		methods:{
-
+			update(){
+				if (this.postId){
+					$('#table').html('');
+					this.isLoading = true;
+					Post.fetchPost(data => {
+						this.post = data.cur;
+						this.content = this.post.content;
+						this.prev = data.prev;
+						this.next = data.next;
+						this.isLoading = false;
+					},error => {
+		              this.isLoading = false;
+		              console.log(error);
+		              this.$router.push({name:'blog_home', params: {userName: this.userName}});
+		            },{postId: this.postId, userName: this.userName});
+				}
+			},
 			processAnchors(){
+
 				$("#table li a[href^='#']").on('click', (e) => {
 					e.preventDefault();
 					var $id = $($(e.target).attr('href'));
@@ -143,22 +185,16 @@ import Header from './Header';
 			}
 		},
 		created(){
-			this.isLoading = true;
-			Post.fetchPost(data => {
-				this.post = data;
-				this.isLoading = false;
-			},error => {
-              this.isLoading = false;
-              console.log(error);
-              this.$router.push({name:'blog_home', params: {userName: this.userName}});
-            },{postId: this.postId, userName: this.userName});
-
+			this.update();
 		},
 		components:{
 			'tag':Tag,
 			VueMarkdown,
 			BackToTop,
 			'blog-header': Header
+		},
+		watch:{
+			'postId':'update'
 		},
 		mounted(){
 			// const gitalk = new Gitalk({

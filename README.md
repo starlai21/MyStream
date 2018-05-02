@@ -16,7 +16,7 @@ Example: [laohubushimao.com](https://laohubushimao.com)
 - [x] Blog configuration
 - [x] Email validation
 - [x] Create, update, delete and hide post
-- [ ] Present previous post & next post
+- [x] Present previous post & next post
 - [ ] Support uploading images
 - [ ] Support comments
 - [ ] Support customized user profile

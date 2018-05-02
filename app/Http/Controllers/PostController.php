@@ -51,7 +51,6 @@ class PostController extends Controller
         }
     }
 
-
     public function index(){
         //sleep(1);
     	if (($postId = request()->input('postId')) != null){
@@ -60,6 +59,32 @@ class PostController extends Controller
                                 $q->where('name',request()->input('userName'));
                             })
                             ->findOrFail($postId);
+
+            if (Auth::user() && Auth::user()->id == $post->user->id){
+                $prev = $post->user->posts()
+                                    ->where('id','<',$post->id)
+                                    ->orderBy('id','desc')
+                                    ->first();
+                $next = $post->user->posts()
+                                    ->where('id','>',$post->id)
+                                    ->first();
+                return ['prev' => $prev, 'cur' => $post, 'next' => $next];
+            }
+            else{
+                if (!$post->posted){
+                    return ['prev' => null, 'cur' => null, 'next' => null];
+                }
+                $prev = $post->user->posts()
+                                    ->where('posted',true)
+                                    ->where('id','<',$post->id)
+                                    ->orderBy('id','desc')
+                                    ->first();
+                $next = $post->user->posts()
+                                    ->where('posted',true)
+                                    ->where('id','>',$post->id)
+                                    ->first();
+                return ['prev' => $prev, 'cur' => $post, 'next' => $next];
+            }
             // in draft state.
             if (!$post->posted){
                 if (Auth::user() && Auth::user()->id == $post->user->id)
