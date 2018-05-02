@@ -62,7 +62,7 @@ class PostController extends Controller
                             ->findOrFail($postId);
             // in draft state.
             if (!$post->posted){
-                if (Auth::user() && Auth::user() == $post->user)
+                if (Auth::user() && Auth::user()->id == $post->user->id)
                     return $post;
                 return null;
             }

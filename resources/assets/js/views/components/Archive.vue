@@ -38,7 +38,8 @@ import Post from '../../models/Post.js';
 				return false;
 			},
 			updateArchives(){
-				Post.archives(data => this.archives = data,{userName: this.$route.params.userName});
+				if (this.$route.params.userName)
+					Post.archives(data => this.archives = data,{userName: this.$route.params.userName});
 			}
 		},
 		watch:{
