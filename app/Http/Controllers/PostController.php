@@ -201,5 +201,14 @@ class PostController extends Controller
         }
     }
 
+    public function storeImages(){
+        $res = [];
+        foreach ($_FILES as $key => $value){
+            $pos = str_replace('_','.',$key);
+            $path = request()->file($key)->store('public/images');
+            $res[$pos] = asset(substr($path,7));
+        }
+        return $res;
+    }
 
 }

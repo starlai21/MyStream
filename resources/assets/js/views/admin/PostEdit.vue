@@ -26,7 +26,7 @@
 		<div class="field">
 			<label class="label">Content</label>
 			<div class="control">
-				<mavon-editor codeStyle="solarized-light" v-model="content" @input="clearError('content')"></mavon-editor>
+				<mavon-editor codeStyle="solarized-light" v-model="content" @input="clearError('content')" ref=md @imgAdd="addImage" @imgDel="deleteImage"></mavon-editor>
 			</div>
 			<p class="help is-danger" v-if="errors_.content">{{errors_.content[0]}}</p>
 		</div>
@@ -36,7 +36,11 @@
 	</footer>
 </div>
 </template>
-
+<style type="text/css">
+	.dropdown-item button{
+		top:4px;
+	}
+</style>
 <script>
 import InputTag from 'vue-input-tag';
 import Post from '../../models/Post.js';
@@ -50,7 +54,8 @@ import Post from '../../models/Post.js';
 				tags: [],
 				content: '',
 				postId: null,
-				errors_: []
+				errors_: [],
+				img_file: {}
 			};
 		},
 		watch:{
@@ -69,7 +74,45 @@ import Post from '../../models/Post.js';
 			InputTag
 		},
 		methods:{
-			update(){
+			addImage(pos, $file){
+	           	this.img_file[pos] = $file;
+	        },
+	        deleteImage(pos){
+	        	delete this.img_file[pos];
+	        },
+	        uploadImages(then){
+	        	if ($.isEmptyObject(this.img_file)){
+	        		then();
+	        	}
+	        	else{
+	        		var formdata = new FormData();
+		            for(var _img in this.img_file){
+		                formdata.append(_img, this.img_file[_img]);
+		            }
+		            axios({
+		                url: '/api/image/store',
+		                method: 'post',
+		                data: formdata,
+		                headers: { 'Content-Type': 'multipart/form-data' },
+		            }).then(({data}) => {
+		                for (var key in data) {
+		                    this.$refs.md.$img2Url(key,data[key]);
+		                }
+		                Vue.nextTick().then( () => {
+		                	then();
+		                });
+		                
+		            }).catch(e => {
+		            	console.log(e);
+		            	then();
+		            });	        		
+	        	}
+
+	        },
+	        update(){
+	        	this.uploadImages(this.send);
+	        },
+			send(){
 				let params = {
 					title: this.title,
 					abstract: this.abstract,

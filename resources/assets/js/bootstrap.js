@@ -15,7 +15,7 @@ import VeeValidate from 'vee-validate';
 import mavonEditor from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
 import 'highlight.js/styles/solarized-light.css';
-
+import Affix from 'vue-affix'
 
 
 // CommonJS
@@ -24,15 +24,14 @@ window.Swal = require('sweetalert2');
 
 
 
-window.Vue = Vue;
 Vue.use(Toasted);
 Vue.use(VueRouter);
 Vue.use(VeeValidate);
 
 Vue.use(mavonEditor);
 
-var VueAffix = require('vue-affix');
-Vue.use(VueAffix);
+// var VueAffix = require('vue-affix').default;
+Vue.use(Affix);
 
 Vue.directive('highlight',(el)=>{
 	Vue.nextTick(()=>{
@@ -42,14 +41,14 @@ Vue.directive('highlight',(el)=>{
 	    });
 	});
 });
-
+window.Vue = Vue;
 
 
 
 
 
 window._ = require('lodash');
-window.Popper = require('popper.js').default;
+// window.Popper = require('popper.js').default;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support

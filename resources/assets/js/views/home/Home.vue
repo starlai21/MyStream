@@ -54,10 +54,7 @@
     </div>
       
         <router-view></router-view>
-      
-
   </section>
-
 </template>
 <style type="text/css">
 	.hero.is-info {

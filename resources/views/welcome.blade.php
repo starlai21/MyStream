@@ -2,7 +2,7 @@
 
 
 @section('body')
-	<div id="app">  
+	<div id="app"> 
 	    <transition name="fade">
 		    <keep-alive>
 		        <router-view v-if="$route.meta.keepAlive"></router-view>

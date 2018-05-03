@@ -71,6 +71,13 @@ Route::middleware(['refresh.token'])->group(function($router) {
     $router->post('post/create','PostController@store');
     $router->post('post/{post}/toggle','PostController@toggle');
 
+    $router->post('image/store','PostController@storeImages');
+
+
+
+
+
+
     //blog
     $router->post('/blog/update','BlogController@update');
 });

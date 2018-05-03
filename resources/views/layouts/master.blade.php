@@ -5,12 +5,12 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>Stream</title>
+        <title>My Stream</title>
         <link rel="shortcut icon" href="{{asset('images/avatar.jpg')}}" >
 
         <!-- Fonts -->
         <link rel="stylesheet" href="/css/app.css">
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+     
 
 
         
@@ -34,7 +34,6 @@
             }
 
             html,body{
-               /* font-family: 'Open Sans', serif;*/
                 font-family: 'cursive', Comic Sans MS;
                 font-size: 16px;
                 font-weight: 300;

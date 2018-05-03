@@ -93,7 +93,7 @@ import moment from 'moment';
 import VueMarkdown from 'vue-markdown';
 import BackToTop from 'vue-backtotop';
 import 'gitalk/dist/gitalk.css';
-import Gitalk from 'gitalk';
+// import Gitalk from 'gitalk';
 import Header from './Header';
 
 

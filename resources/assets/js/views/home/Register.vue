@@ -24,7 +24,7 @@
               <div class="field">
                 <label class="label">Username</label>
                 <div class="control has-icons-left has-icons-right">
-                    <input type="text" placeholder="It cannot be changed." name="userName" v-model="userName" v-validate="'required|alpha_dash|username_unique'" data-vv-delay="1000" :class="{'input': true, 'is-danger': errors.has('userName'), 'is-success': fields.userName && fields.userName.valid }">
+                    <input type="text" placeholder="your blog uri will be: /blog/username" name="userName" v-model="userName" v-validate="'required|alpha_dash|username_unique'" data-vv-delay="1000" :class="{'input': true, 'is-danger': errors.has('userName'), 'is-success': fields.userName && fields.userName.valid }">
                     <span class="icon is-small is-left">
                       <i class="fa fa-user"></i>
                     </span>
