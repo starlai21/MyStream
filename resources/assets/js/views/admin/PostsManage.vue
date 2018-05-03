@@ -38,7 +38,11 @@
 					  </thead>
 					  <tbody>
 					  	<tr v-for="post in posts">
-					  		<th :class="{ 'has-text-success': post.posted == '1'}">{{post.title}}</th>
+					  		<th>
+					  			<router-link :class="[post.posted == 1 ? 'has-text-success': 'has-text-danger']" :to="{ name: 'post',params:{postId: post.id, userName: userName} }">
+					  				{{post.title}} 
+					  			</router-link>
+					  		</th>
 					  		<th>{{post.created_at|postOn}}</th>
 					  		<th>
 					  			<button class="button is-primary" @click="activateEdit(post)">
