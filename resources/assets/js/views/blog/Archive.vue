@@ -98,7 +98,7 @@ import {mapState} from 'vuex';
         
         },error =>{
         console.log(error);
-        },null,{paginate:false,userName: this.userName});
+        },null,{pagination:false,userName: this.userName});
       },
       updateAll(){
         this.updatePosts();
