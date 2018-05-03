@@ -206,7 +206,7 @@ class PostController extends Controller
         foreach ($_FILES as $key => $value){
             $pos = str_replace('_','.',$key);
             $path = request()->file($key)->store('public/images');
-            $res[$pos] = asset(substr($path,7));
+            $res[$pos] = asset('/storage'.substr($path,7));
         }
         return $res;
     }
