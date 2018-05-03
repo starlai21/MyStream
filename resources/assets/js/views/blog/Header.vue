@@ -116,6 +116,10 @@
     background: url('/images/avatar.jpg') center center; 
     background-size: cover; 
   }
+  h2.subtitle {
+    padding-top: 0.5rem;
+  }
+
 </style>
 
 <script type="text/javascript">

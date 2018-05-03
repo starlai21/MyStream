@@ -100,7 +100,7 @@ class PostController extends Controller
             }
             if (!$this->isAdmin($this->user()))
                 $posts = $posts->where('posted',true);
-            $pagination = request('paginate');
+            $pagination = request('pagination');
             if ($pagination == 'false'){
                 return $posts->with('tags:name')->get();
             }
