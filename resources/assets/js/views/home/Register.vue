@@ -5,7 +5,7 @@
         <div class="column is-6 is-offset-3">
           <h3 class="title ">My Stream - Sign Up</h3>
           <p class="subtitle">A step away from creating your blog.</p>
-          <div class="box has-text-left">
+          <div class="box has-text-left" v-show="!authenticated">
               <div class="field">
                 <label class="label">Email</label>
                 <div class="control has-icons-left has-icons-right">
@@ -71,6 +71,26 @@
                 Sign up with github
               </a>
           </div>
+          <div class="box has-text-left" v-show="authenticated">
+            <div class="field">
+                <label class="label">Username</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input type="text" placeholder="blog uri: /blog/username" name="userName" v-model="userName" v-validate="'required|alpha_dash|username_unique'" data-vv-delay="1000" :class="{'input': true, 'is-danger': errors.has('userName'), 'is-success': fields.userName && fields.userName.valid }">
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-user"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                      <i v-show="errors.has('userName')" class="fa fa-warning"></i>
+                    </span>
+                    
+                    <span v-show="errors.has('userName')" class="help is-danger">{{ errors.first('userName') }}</span>
+                    <span v-show="!errors.has('userName') && fields.userName && fields.userName.valid" class="help is-success">I'm available.</span>
+                </div>
+            </div>
+            <a class="button is-block is-primary is-fullwidth" @click="authRegister('github')">Submit</a>
+          </div>
+
+
           <p>
             <router-link :to="{name:'login'}">Sign in</router-link> &nbsp;·&nbsp;
             <router-link :to="{name:'forgotPassword'}">Forgot password</router-link> 
@@ -104,7 +124,6 @@ p.subtitle {
 }
 </style>
 <script>
-// import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
 
 	export default {
@@ -114,7 +133,8 @@ import { Validator } from 'vee-validate';
 				password:'',
         password_confirmation:'',
         userName:'',
-        token: null
+        token: null,
+        authenticated: false
 			};
 		},
     components:{
@@ -151,21 +171,36 @@ import { Validator } from 'vee-validate';
           this.$auth.logout();
         }
         this.$auth.authenticate(provider).then(r => {
-          // if (provider === 'github') {
-          //   this.$http.get('https://api.github.com/user').then(function (response) {
-          //     console.log(response);
-          //   })
-          //   .catch(e => console.log(e));
-          // }
-          console.log(r);
-          console.log('Authenticated');
-          this.token = this.$auth.getToken();
-          console.log(this.token);
+          this.authenticated = true;
         })
         .catch(e => console.log(e));
 
+      },
+      authRegister(provider){
+        this.$validator.validate('userName',this.userName).then((result) => {
+          if (result){
+            axios.post('/api/auth/authRegister',{name: this.userName, provider: provider, access_token: this.$auth.getToken()})
+                    .then(response => {
+                      if (response.data.status === 'success'){
+                        // this.$auth.logout();
+                        this.$store.dispatch('logined',{token: response.data.token, userName: this.userName});
+                      }
+                      Swal({
+                        type: response.data.status,
+                        title: response.data.message
+                      });
+                    })
+                    .catch(e => {
+                      console.log(e);
+                      // this.errors.add('email','it is wrong');
+                      Swal({
+                        type: 'error',
+                        title: 'Something went wrong.'
+                      });
+                    });
+          }
+        });
       }
-
 		},
     created(){
       Validator.extend('email_unique', {
@@ -186,6 +221,9 @@ import { Validator } from 'vee-validate';
                                     };
                                   })
       });
+
+      this.authenticated = this.$auth.isAuthenticated();
+ 
     }
 	}
 </script>

@@ -44,11 +44,10 @@ class UserPasswordReset extends Notification
     {
         $user = $this->user;
         return (new MailMessage)
-                    ->from(ENV('ADMIN_EMAIL'))
                     ->subject('Password Reset.')
                     ->greeting(sprintf('Hello %s', $user->name))
                     ->line('Please reset your password as soon as possible.')
-                    ->action('Click Here', url("/resetPassword/{$user->password_reset_code}"));
+                    ->action('Click Here', url("/resetPassword/{$user->emailLoginUser->password_reset_code}"));
                     
     }
 

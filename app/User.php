@@ -15,8 +15,11 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
+    // protected $fillable = [
+    //     'name', 'email', 'password','activation_code', 'activated','password_reset_code'
+    // ];
     protected $fillable = [
-        'name', 'email', 'password','activation_code', 'activated','password_reset_code'
+        'name'
     ];
 
     /**
@@ -24,10 +27,14 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    // protected $hidden = [
+    //     'password'
+    // ];
 
+    public function routeNotificationForMail($notification)
+    {
+        return $this->emailLoginUser->email;
+    }
 
 
 
@@ -36,12 +43,28 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public static function activated($userName){
-        return static::where('name', $userName)->first()->activated;
+        $user = static::where('name', $userName)->first();
+        if ($user->emailLoginUser)
+            return $user->emailLoginUser->activated;
+        return true;
     }
+
+
+
 
     public function posts(){
         return $this->hasMany(Post::class);
     }
+
+
+    public function emailLoginUser(){
+        return $this->hasOne(EmailLoginUser::class);
+    }
+
+    public function socialLoginUser(){
+        return $this->hasMany(SocialLoginUser::class);
+    }
+
 
     public function blog(){
         return $this->hasOne(Blog::class);

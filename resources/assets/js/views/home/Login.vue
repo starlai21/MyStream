@@ -37,7 +37,7 @@
 
               <a class="button is-block is-primary is-fullwidth" @click="login">Sign in</a>
               or
-              <a class="button is-block is-dark is-fullwidth">
+              <a class="button is-block is-dark is-fullwidth" @click="loginWith('github')">
                 <span class="icon is-left"><i class="fa fa-github"></i></span>&nbsp
                 Sign in with github
               </a>
@@ -101,6 +101,16 @@ p.subtitle {
           });
         }
 			},
+      loginWith(provider){
+        if (this.$auth.isAuthenticated()) {
+          this.$auth.logout();
+        }
+        this.$auth.authenticate(provider).then(response => {
+          this.$store.dispatch('logined',{token: response.data.token,userName: response.data.userName});
+        })
+        .catch(e => console.log(e));
+
+      },
 			clear(){
 				this.login_errors = [];
 			}
