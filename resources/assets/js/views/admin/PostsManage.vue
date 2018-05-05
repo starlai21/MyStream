@@ -16,6 +16,8 @@
 		  <button class="modal-close is-large" aria-label="close"  @click="editModalClose"></button>
 		</div>
 		<!-- modal end -->
+
+
 		<fingerprint-spinner v-if="isLoading"
 		  :animation-duration="1500"
 		  :size="64"
@@ -45,14 +47,16 @@
 					  		</th>
 					  		<th>{{post.created_at|postOn}}</th>
 					  		<th>
-					  			<button class="button is-primary" @click="activateEdit(post)">
+					  			<button v-tooltip.top="'edit'" class="button is-primary" @click="activateEdit(post)">
 					  				<i class="fa fa-edit" style="font-size:20px"></i>
 					  			</button>
-								<button class="button is-warning" @click="togglePostStatus(post.id,post.posted)">
-									<i class="fa fa-eye" style="font-size:20px" v-if="post.posted === 0"></i>
-									<i class="fa fa-eye-slash" style="font-size:20px" v-else></i>
+								<button v-tooltip.top="'switch to public mode'" class="button is-warning" v-if="post.posted === 0" @click="togglePostStatus(post.id,post.posted)">
+									<i class="fa fa-eye" style="font-size:20px" ></i>
 								</button>
-								<button class="button is-danger" @click="deletePost(post.id)">
+								<button v-tooltip.top="'switch to draft mode'" class="button is-warning" v-else @click="togglePostStatus(post.id,post.posted)">
+									<i class="fa fa-eye-slash" style="font-size:20px"></i>
+								</button>
+								<button v-tooltip.top="'delete'" class="button is-danger" @click="deletePost(post.id)">
 									<i class="fa fa-trash" style="font-size:24px"></i>
 								</button>
 							</th>
@@ -95,7 +99,16 @@
 <style>
 	.is-responsive{
 		overflow-x: auto;
-	}
+	},
+	.my-popper {
+    	background: #FFC107;
+    	color: black;
+    	width: 150px;
+    	border-radius: 3px;
+    	box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    	padding: 10px;
+    	text-align: center;
+    }
 </style>
 <script>
 
@@ -111,6 +124,9 @@ import {mapState} from 'vuex';
 				isEditActive: false,
 				postEdited:null
 			};
+		},
+		mounted(){
+
 		},
 		components:{
 			PostCreate,

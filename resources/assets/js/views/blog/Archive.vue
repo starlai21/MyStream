@@ -71,11 +71,6 @@ import {mapState} from 'vuex';
     created(){
       this.updateAll();
     },
-    filters:{
-      postOn(created_at){
-        return moment(created_at).format("MMMM YYYY");
-      }
-    },
     methods:{
       updatePosts(){
         Post.all(data => {
@@ -111,6 +106,9 @@ import {mapState} from 'vuex';
           return "is-dark";
         else
           return color;
+      },
+      postOn(created_at){
+        return moment(created_at).format("MMMM YYYY");
       }
     },
     watch:{

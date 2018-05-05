@@ -22,7 +22,7 @@
 
               <div class="field">
                 <div class="control has-icons-left has-icons-right">
-                   <input name="password" type="password" placeholder="Password" v-model="password" @input = "clear" required  v-validate="{min: 6, max:20}" data-vv-delay="1000" :class="{'input': true, 'is-danger': errors.has('password')}">
+                   <input name="password" type="password" placeholder="Password" v-model="password" @input = "clear" required  v-validate="{min: 6, max:20}" data-vv-delay="1000" :class="{'input': true, 'is-danger': errors.has('password')}" @keyup.enter="login">
 				          <span class="icon is-small is-left">
 				            <i class="fa fa-lock"></i>
 				          </span>
@@ -35,11 +35,17 @@
                 </div>
               </div>
 
-              <a class="button is-block is-primary is-fullwidth" @click="login">Sign In</a>
+              <a class="button is-block is-primary is-fullwidth" @click="login">Sign in</a>
+              or
+              <a class="button is-block is-dark is-fullwidth">
+                <span class="icon is-left"><i class="fa fa-github"></i></span>&nbsp
+                Sign in with github
+              </a>
+
           </div>
           <p>
-            <router-link :to="{name:'register'}">Sign Up</router-link> &nbsp;·&nbsp;
-            <router-link :to="{name:'forgotPassword'}">Forgot Password</router-link>          
+            <router-link :to="{name:'register'}">Sign up</router-link> &nbsp;·&nbsp;
+            <router-link :to="{name:'forgotPassword'}">Forgot password</router-link>          
           </p>
         </div>
       </div>

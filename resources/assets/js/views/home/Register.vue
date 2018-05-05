@@ -24,7 +24,7 @@
               <div class="field">
                 <label class="label">Username</label>
                 <div class="control has-icons-left has-icons-right">
-                    <input type="text" placeholder="your blog uri will be: /blog/username" name="userName" v-model="userName" v-validate="'required|alpha_dash|username_unique'" data-vv-delay="1000" :class="{'input': true, 'is-danger': errors.has('userName'), 'is-success': fields.userName && fields.userName.valid }">
+                    <input type="text" placeholder="blog uri: /blog/username" name="userName" v-model="userName" v-validate="'required|alpha_dash|username_unique'" data-vv-delay="1000" :class="{'input': true, 'is-danger': errors.has('userName'), 'is-success': fields.userName && fields.userName.valid }">
                     <span class="icon is-small is-left">
                       <i class="fa fa-user"></i>
                     </span>
@@ -64,11 +64,16 @@
               </div>
 
               
-              <a class="button is-block is-primary is-fullwidth" @click="register">Sign Up</a>
+              <a class="button is-block is-primary is-fullwidth" @click="register">Sign up</a>
+              <div class="has-text-centered">or</div>
+              <a class="button is-block is-dark is-fullwidth" @click="registerWith('github')">
+                <span class="icon is-left"><i class="fa fa-github"></i></span>&nbsp
+                Sign up with github
+              </a>
           </div>
           <p>
-            <router-link :to="{name:'login'}">Sign In</router-link> &nbsp;·&nbsp;
-            <router-link :to="{name:'forgotPassword'}">Forgot Password</router-link> 
+            <router-link :to="{name:'login'}">Sign in</router-link> &nbsp;·&nbsp;
+            <router-link :to="{name:'forgotPassword'}">Forgot password</router-link> 
           </p>
         </div>
       </div>
@@ -108,7 +113,8 @@ import { Validator } from 'vee-validate';
 				email:'',
 				password:'',
         password_confirmation:'',
-        userName:''
+        userName:'',
+        token: null
 			};
 		},
     components:{
@@ -139,7 +145,26 @@ import { Validator } from 'vee-validate';
             
           }
         });
-			}
+			},
+      registerWith(provider){
+        if (this.$auth.isAuthenticated()) {
+          this.$auth.logout();
+        }
+        this.$auth.authenticate(provider).then(r => {
+          // if (provider === 'github') {
+          //   this.$http.get('https://api.github.com/user').then(function (response) {
+          //     console.log(response);
+          //   })
+          //   .catch(e => console.log(e));
+          // }
+          console.log(r);
+          console.log('Authenticated');
+          this.token = this.$auth.getToken();
+          console.log(this.token);
+        })
+        .catch(e => console.log(e));
+
+      }
 
 		},
     created(){

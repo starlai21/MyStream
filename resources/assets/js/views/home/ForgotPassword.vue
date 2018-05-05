@@ -22,8 +22,8 @@
               <a class="button is-block is-primary is-fullwidth" @click="submit">Submit</a>
           </div>
           <p>
-            <router-link :to="{name:'register'}">Sign Up</router-link> &nbsp;·&nbsp;
-            <router-link :to="{name:'login'}">Sign In</router-link>
+            <router-link :to="{name:'register'}">Sign up</router-link> &nbsp;·&nbsp;
+            <router-link :to="{name:'login'}">Sign in</router-link>
             
           </p>
         </div>

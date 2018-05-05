@@ -36,7 +36,7 @@
             	    <span class="icon">
             	      <i class="fa fa-sign-in"></i>
             	    </span>
-            	    <span>Sign In</span>
+            	    <span>Sign in</span>
             	  </router-link>
             	</span>
             	<span class="navbar-item">
@@ -44,7 +44,7 @@
             	    <span class="icon">
             	      <i class="fa fa-github"></i>
             	    </span>
-            	    <span>View Source</span>
+            	    <span>View source</span>
             	  </a>
             	</span>
           	  </div>

@@ -59,7 +59,7 @@
                 <span class="icon">
                   <i class="fa fa-sign-out"></i>
                 </span>
-                <span>Sign Out</span>
+                <span>Sign out</span>
               </a>
             </span>
 

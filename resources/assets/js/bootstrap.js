@@ -17,13 +17,23 @@ import 'mavon-editor/dist/css/index.css';
 import 'highlight.js/styles/solarized-light.css';
 import Affix from 'vue-affix'
 
+import Tooltip from 'vue-directive-tooltip';
+import 'vue-directive-tooltip/css/index.css';
+
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+import VueAuthenticate from 'vue-authenticate';
+
+
 
 // CommonJS
 window.Swal = require('sweetalert2');
 
 
 
-
+Vue.use(Tooltip,{
+	delay: 0
+});
 Vue.use(Toasted);
 Vue.use(VueRouter);
 Vue.use(VeeValidate);
@@ -33,7 +43,23 @@ Vue.use(mavonEditor);
 // var VueAffix = require('vue-affix').default;
 Vue.use(Affix);
 
-Vue.directive('highlight',(el)=>{
+
+Vue.use(VueAxios, axios);
+Vue.use(VueAuthenticate, {
+  	baseUrl: 'http://stream.test/', // Your API domain
+  	providers: {
+    github: {
+    	url: 'api/auth/github',
+      	clientId: '47cbca2404878e6637ab',
+      	clientSecret: '90ad2bdb2db2b14ceeac4be7035e2cbd8f949b1a',
+      	redirectUri: 'http://stream.test/' // Your client app URL
+    }
+  }
+})
+
+
+
+Vue.directive('highlight',(el)=> {
 	Vue.nextTick(()=>{
 		let blocks = el.querySelectorAll('pre code');
 	    blocks.forEach((block) => {
@@ -68,7 +94,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = require('axios');
+window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
