@@ -106,7 +106,10 @@ p.subtitle {
           this.$auth.logout();
         }
         this.$auth.authenticate(provider).then(response => {
-          this.$store.dispatch('logined',{token: response.data.token,userName: response.data.userName});
+          if (response.data.status === 'registered')
+            this.$store.dispatch('logined',{token: response.data.token,userName: response.data.userName});
+          else
+            this.$router.push({name:'register'});
         })
         .catch(e => console.log(e));
 

@@ -185,6 +185,7 @@ class AuthController extends Controller
 
         parse_str(html_entity_decode($response->getBody()), $res);
 
+
         $response = $client->get('https://api.github.com/user',['query' => $res]);
         
         $body = json_decode($response->getBody()->getContents());
@@ -198,11 +199,19 @@ class AuthController extends Controller
             $token = auth()->login($user);
             return ['token' => 'Bearer ' . $token,
                             'status' => 'success',
-                            'userName' => $user->name];
+                            'userName' => $user->name,
+                            'access_token' =>  $res['access_token'],
+                            'status' => 'registered'];
         }
         else{
-            return ['access_token' => $res['access_token']];
+            return ['access_token' => $res['access_token'],
+                    'status' => 'nonregistered'];
         }
+
+    }
+
+
+    public function authLogin(){
 
     }
 
