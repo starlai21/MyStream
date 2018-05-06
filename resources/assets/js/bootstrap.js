@@ -42,6 +42,14 @@ Vue.use(mavonEditor);
 
 // var VueAffix = require('vue-affix').default;
 Vue.use(Affix);
+var host = window.location.hostname;
+
+var clientId = '47cbca2404878e6637ab';
+var clientSecret = '90ad2bdb2db2b14ceeac4be7035e2cbd8f949b1a';
+if (host === 'laohubushimao.com' || host === 'www.laohubushimao.com'){
+  clientId = '7ef439909543190bfe1b';
+  clientSecret = 'f6c41fd5b708ae05bd6ea9e0e4f20a40c6a31464';
+}
 
 
 Vue.use(VueAxios, axios);
@@ -50,8 +58,8 @@ Vue.use(VueAuthenticate, {
   	providers: {
     github: {
     	url: 'api/auth/github',
-      	clientId: '47cbca2404878e6637ab',
-      	clientSecret: '90ad2bdb2db2b14ceeac4be7035e2cbd8f949b1a',
+      	clientId: clientId,
+      	clientSecret: clientSecret,
       	redirectUri: '/' // Your client app URL
     }
   }
