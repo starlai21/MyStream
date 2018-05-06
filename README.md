@@ -18,9 +18,10 @@
 - [x] Create, update, delete and hide post
 - [x] Present previous post & next post
 - [x] Support uploading images
+- [x] OAuth 2.0 (github)
 - [ ] Support comments
 - [ ] Support customized user profile
-- [ ] OAuth 2.0
+
 
 
 
