@@ -46,13 +46,13 @@ Vue.use(Affix);
 
 Vue.use(VueAxios, axios);
 Vue.use(VueAuthenticate, {
-  	baseUrl: 'http://stream.test/', // Your API domain
+  	baseUrl: '/', // Your API domain
   	providers: {
     github: {
     	url: 'api/auth/github',
       	clientId: '47cbca2404878e6637ab',
       	clientSecret: '90ad2bdb2db2b14ceeac4be7035e2cbd8f949b1a',
-      	redirectUri: 'http://stream.test/' // Your client app URL
+      	redirectUri: '/' // Your client app URL
     }
   }
 })
