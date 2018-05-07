@@ -11,7 +11,8 @@ export default new Vuex.Store({
         userName: null,
         tempUserName: null,
         blog: null,
-        notify: 0
+        notify: 0,
+        isLogined: false
     },
     mutations: {
 
@@ -28,6 +29,7 @@ export default new Vuex.Store({
         [types.LOGINED]: (state,token) => {
             state.token = token;
             state.userName = localStorage.userName;
+            state.isLogined = true;
         },
 
         [types.LOGIN]: (state, {token, userName}) => {
@@ -35,15 +37,18 @@ export default new Vuex.Store({
             localStorage.userName = userName;
             state.token = token;
             state.userName = userName;
+            state.isLogined = true;
             let params = {};
             params['userName'] = userName;
             router.push({name:'posts_manage', params: params});
+
         },
         [types.LOGOUT]: (state) => {
             router.push({name:'login'});
             localStorage.removeItem('token');
             localStorage.removeItem('userName');
             state.token = null;
+            state.isLogined = false;
 
         },
         [types.REFRESH_TOKEN]: (state, data) => {

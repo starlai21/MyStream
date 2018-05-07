@@ -60,6 +60,29 @@ class PostController extends Controller
                             })
                             ->findOrFail($postId);
 
+            //fetch comments
+            $comments = $post->comments()
+                                ->with('user:name,id')
+                                ->withCount('likes')
+                                ->withCount('replies')
+                                ->get();
+            //fetch likes
+            $likes = [];
+            $user = Auth::user();
+            foreach($comments as $comment){
+                if ($user){
+                    if ($comment->likes()
+                                ->where('user_id',$user->id)
+                                ->exists())
+                        array_push($likes,true);
+                    else
+                        array_push($likes,false);
+                }
+                else{
+                    array_push($likes,false);
+                }
+            }
+
             if (Auth::user() && Auth::user()->id == $post->user->id){
                 $prev = $post->user->posts()
                                     ->where('id','<',$post->id)
@@ -68,11 +91,12 @@ class PostController extends Controller
                 $next = $post->user->posts()
                                     ->where('id','>',$post->id)
                                     ->first();
-                return ['prev' => $prev, 'cur' => $post, 'next' => $next];
+                return ['prev' => $prev, 'cur' => $post, 'next' => $next, 'comments' => $comments,
+                        'likes' => $likes];
             }
             else{
                 if (!$post->posted){
-                    return ['prev' => null, 'cur' => null, 'next' => null];
+                    return ['prev' => null, 'cur' => null, 'next' => null, 'comments' => null, 'likes' => null];
                 }
                 $prev = $post->user->posts()
                                     ->where('posted',true)
@@ -83,15 +107,9 @@ class PostController extends Controller
                                     ->where('posted',true)
                                     ->where('id','>',$post->id)
                                     ->first();
-                return ['prev' => $prev, 'cur' => $post, 'next' => $next];
+                return ['prev' => $prev, 'cur' => $post, 'next' => $next, 'comments' => $comments,
+                        'likes' => $likes];
             }
-            // in draft state.
-            if (!$post->posted){
-                if (Auth::user() && Auth::user()->id == $post->user->id)
-                    return $post;
-                return null;
-            }
-            return $post;
     	}
     	else{
             $posts = Post::latest();

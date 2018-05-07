@@ -69,6 +69,22 @@ class User extends Authenticatable implements JWTSubject
     public function blog(){
         return $this->hasOne(Blog::class);
     }
+
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+
+    public function replies(){
+        return $this->hasMany(Reply::class);
+    }
+
+    public function likes(){
+        return $this->hasMany(Like::class);
+    }
+
+
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

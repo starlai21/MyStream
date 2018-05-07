@@ -48,7 +48,7 @@
             <router-link v-if="token" :to="{ name: 'posts_manage', params: { userName: loginedUserName }}" class="navbar-item" @click.native="isNavOpen && navToggle()">
                <span>Manage Blog</span>
             </router-link>
-            <router-link v-else :to="{ name: 'login'}" class="navbar-item" @click.native="isNavOpen && navToggle()">
+            <router-link v-else :to="{ name: 'login' , query: {redirect: this.$route.fullPath}}" class="navbar-item" @click.native="isNavOpen && navToggle()">
                <span>Login</span>
             </router-link>
 

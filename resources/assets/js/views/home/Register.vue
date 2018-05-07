@@ -117,7 +117,7 @@ input {
   font-weight: 300;
 }
 p {
-  font-weight: 700;
+  /*font-weight: 700;*/
 }
 p.subtitle {
   padding-top: 1rem;
@@ -183,7 +183,10 @@ import { Validator } from 'vee-validate';
                     .then(response => {
                       if (response.data.status === 'success'){
                         // this.$auth.logout();
+                        var redirectUrl = this.$route.query.redirect;
                         this.$store.dispatch('logined',{token: response.data.token, userName: this.userName});
+                        if (redirectUrl)
+                          this.$router.push(redirectUrl);
                       }
                       Swal({
                         type: response.data.status,

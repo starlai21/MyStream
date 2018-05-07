@@ -63,7 +63,7 @@ input {
   font-weight: 300;
 }
 p {
-  font-weight: 700;
+  /*font-weight: 700;*/
 }
 p.subtitle {
   padding-top: 1rem;
@@ -85,8 +85,13 @@ p.subtitle {
             if (result){
               axios.post('/api/auth/login',{email:this.email,password:this.password})
                       .then(response => {
-                        if (response.data.status === 'success')
+                        if (response.data.status === 'success'){
+                          var redirectUrl = this.$route.query.redirect;
                           this.$store.dispatch('logined',{token: response.data.token,userName: response.data.userName});
+
+                          if (redirectUrl)
+                            this.$router.push(redirectUrl);
+                        } 
                         else{
                           Swal({
                             type: response.data.status,
@@ -106,8 +111,15 @@ p.subtitle {
           this.$auth.logout();
         }
         this.$auth.authenticate(provider).then(response => {
-          if (response.data.status === 'registered')
+          if (response.data.status === 'registered'){
+            var redirectUrl = this.$route.query.redirect;
+            this.$auth.logout();
             this.$store.dispatch('logined',{token: response.data.token,userName: response.data.userName});
+
+            if (redirectUrl)
+              this.$router.push(redirectUrl);
+
+          }
           else
             this.$router.push({name:'register'});
         })

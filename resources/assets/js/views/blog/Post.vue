@@ -10,7 +10,7 @@
 		  		style="position: fixed;top: 50%;left: 50%;
   				transform: translate(-50%, -50%);"
 			/>
-			<back-to-top text="Back to top" visibleOffset="600">
+			<back-to-top text="Back to top" visibleOffset="800">
 				<a class="button is-dark">Back to Top</a>
 			</back-to-top>
 			<div class="columns">
@@ -36,7 +36,7 @@
 							  <div class="level-right">
 							  	<div class="level-item">
 							  		<span class="tag is-light">{{post.created_at | postOn}}</span>
-							  		<span class="tag is-primary">{{post.user && post.user.name}}</span>
+							  		<span class="tag is-primary is-capitalized">{{post.user && post.user.name}}</span>
 							  	</div>
 							  </div>
 		
@@ -45,9 +45,9 @@
 							<vue-markdown v-highlight :source="content"  :toc="true" toc-class="menu-list" toc-id="table" @toc-rendered="processAnchors" :toc-first-level="1" :toc-last-level="3"
 							 ></vue-markdown>
 							
-						  	<!-- <div v-html="markDown(post.content)" v-highlight></div> -->
 						</div>
 						<hr>
+						<!-- previous post & next post -->
 					  	<nav class="level">
 						  <div class="level-left">
 						  	<div class="level-item">
@@ -65,91 +65,67 @@
 						  </div>
 						</nav>
 						<hr>
-						<!-- <div id="comments">
-							<article class="media">
-							  <figure class="media-left">
-							    <p class="image is-64x64">
-							      <img src="https://bulma.io/images/placeholders/128x128.png">
-							    </p>
+						<div id="comments">
+							<article class="media" v-for="(comment, index) in comments">
+							  <figure class="media-left is-hidden-mobile">
+								  	<p class="image is-64x64">
+								      <img class="is-circular" src="https://unsplash.it/64/64?random">
+								    </p>
 							  </figure>
 							  <div class="media-content">
 							    <div class="content">
 							      <p>
-							        <strong>Barbara Middleton</strong>
+							        <strong class="is-capitalized">
+							        	{{comment.user.name}}
+							        </strong>
+							        <span v-if="comment.user.name === userName" class="tag is-primary">author</span>
+							        &nbsp 
+							         <span class="has-text-grey">
+							         	{{comment.created_at | postAgo}}
+							         </span>
 							        <br>
-							        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porta eros lacus, nec ultricies elit blandit non. Suspendisse pellentesque mauris sit amet dolor blandit rutrum. Nunc in tempus turpis.
+							        {{comment.content}}
 							        <br>
-							        <small><a>Like</a> · <a>Reply</a> · 3 hrs</small>
+							        <small>
+							        	<a><i v-if="likes[index]" class="fa fa-thumbs-up" style="font-size:18px;"></i>
+							        		<i v-else class="fa fa-thumbs-o-up" style="font-size:18px;"></i>
+							        	{{comment.likes_count | formatLikes}}
+							        	</a> · 
+							        	<a>Reply{{comment.replies_count| formatReplies}}</a>
+							        </small>
 							      </p>
 							    </div>							
-
-							    <article class="media">
-							      <figure class="media-left">
-							        <p class="image is-48x48">
-							          <img src="https://bulma.io/images/placeholders/96x96.png">
-							        </p>
-							      </figure>
-							      <div class="media-content">
-							        <div class="content">
-							          <p>
-							            <strong>Sean Brown</strong>
-							            <br>
-							            Donec sollicitudin urna eget eros malesuada sagittis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam blandit nisl a nulla sagittis, a lobortis leo feugiat.
-							            <br>
-							            <small><a>Like</a> · <a>Reply</a> · 2 hrs</small>
-							          </p>
-							        </div>							
-
-							        <article class="media">
-							          Vivamus quis semper metus, non tincidunt dolor. Vivamus in mi eu lorem cursus ullamcorper sit amet nec massa.
-							        </article>							
-
-							        <article class="media">
-							          Morbi vitae diam et purus tincidunt porttitor vel vitae augue. Praesent malesuada metus sed pharetra euismod. Cras tellus odio, tincidunt iaculis diam non, porta aliquet tortor.
-							        </article>
-							      </div>
-							    </article>							
-
-							    <article class="media">
-							      <figure class="media-left">
-							        <p class="image is-48x48">
-							          <img src="https://bulma.io/images/placeholders/96x96.png">
-							        </p>
-							      </figure>
-							      <div class="media-content">
-							        <div class="content">
-							          <p>
-							            <strong>Kayli Eunice </strong>
-							            <br>
-							            Sed convallis scelerisque mauris, non pulvinar nunc mattis vel. Maecenas varius felis sit amet magna vestibulum euismod malesuada cursus libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus lacinia non nisl id feugiat.
-							            <br>
-							            <small><a>Like</a> · <a>Reply</a> · 2 hrs</small>
-							          </p>
-							        </div>
-							      </div>
-							    </article>
 							  </div>
 							</article>
-							<article class="media">
-							  <figure class="media-left">
+						
+							<article class="media" id="postComment" v-if="isLogined">
+							  <figure class="media-left is-hidden-mobile">
 							    <p class="image is-64x64">
-							      <img src="https://bulma.io/images/placeholders/128x128.png">
+							      <img class="is-circular" src="https://unsplash.it/64/64?random">
 							    </p>
 							  </figure>
 							  <div class="media-content">
 							    <div class="field">
 							      <p class="control">
-							        <textarea class="textarea" placeholder="Add a comment..."></textarea>
+							        <textarea class="textarea" v-model="comment_content" placeholder="Add a comment..."></textarea>
 							      </p>
 							    </div>
 							    <div class="field">
 							      <p class="control">
-							        <button class="button">Post comment</button>
+							        <button class="button" @click.prevent="postNewComment" :disabled="!comment_content">Post comment</button>
 							      </p>
 							    </div>
 							  </div>
 							</article>
-						</div> -->
+							<article class="media" v-else>
+							Please&nbsp
+								<router-link :to="{name:'login', query: {redirect: this.$route.fullPath}}">log in
+								</router-link> &nbsp or &nbsp
+								<router-link :to="{name:'register', query: {redirect: this.$route.fullPath}}">create an account
+								</router-link>&nbsp to participate in this conversation.
+							</article>
+
+						</div>
 
 						<div id="gitalk-container"></div>
 					</div>
@@ -170,6 +146,12 @@
 
 </template>
 <style>
+.is-circular {
+    border-radius: 50%;
+}
+.is-author {
+
+}
 
 </style>
 
@@ -179,10 +161,8 @@ import Tag from '../components/Tag';
 import moment from 'moment';
 import VueMarkdown from 'vue-markdown';
 import BackToTop from 'vue-backtotop';
-import 'gitalk/dist/gitalk.css';
-// import Gitalk from 'gitalk';
 import Header from './Header';
-
+import {mapState} from 'vuex';
 
 	export default {
 		props:['postId','userName'],
@@ -192,16 +172,59 @@ import Header from './Header';
 				post: [],
 				prev: null,
 				next: null,
-				content: ''
+				content: '',
+				comments: [],
+				likes: [],
+				comment_content: ''
 			};
 		},
+		computed: mapState({
+    		isLogined: state => state.isLogined
+    	}),
 		filters:{
 			postOn(created_at){
               // return moment(post.created_at).fromNow();
             	return moment(created_at).format("MMMM D, YYYY");
+        	},
+
+        	postAgo(created_at){
+        		return moment(created_at).fromNow();
+        	},
+        	formatLikes(number){
+        		if (number === 0)
+        			return '';
+        		return number;
+        	},
+        	formatReplies(number){
+        		if (number === 0)
+        			return '';
+        		return "(" + number + ")";
         	}
 		},
 		methods:{
+			postNewComment(){
+				axios.post("/api/comment/store",{content: this.comment_content, post_id: this.post.id})
+						.then(response => {
+							if (response.data.status === 'success'){
+								// this.update();
+								Vue.set(this.comments, this.comments.length, response.data.comment);
+								this.comment_content = '';
+							}
+	                    	Swal({
+	                    	  type: response.data.status,
+	                    	  title: response.data.message
+	                    	});
+
+
+						})
+						.catch(e => {
+							console.log(e);
+							Swal({
+	                    		type: "error",
+	                    		title: "Woops, something wen wrong!"
+	                    	});
+						});
+			},
 			update(){
 				if (this.postId){
 					$('#table').html('');
@@ -212,6 +235,8 @@ import Header from './Header';
 						this.prev = data.prev;
 						this.next = data.next;
 						this.isLoading = false;
+						this.comments = data.comments;
+						this.likes = data.likes;
 					},error => {
 		              this.isLoading = false;
 		              console.log(error);
@@ -284,17 +309,7 @@ import Header from './Header';
 			'postId':'update'
 		},
 		mounted(){
-			// const gitalk = new Gitalk({
-			//   clientID: '47cbca2404878e6637ab',
-			//   clientSecret: '90ad2bdb2db2b14ceeac4be7035e2cbd8f949b1a',
-			//   repo: 'MyStream',
-			//   owner: 'starlai21',
-			//   admin: ['starlai21'],
-			//   id: location.pathname,      // Ensure uniqueness and length less than 50
-			//   distractionFreeMode: false  // Facebook-like distraction free mode
-			// })
 
-			// gitalk.render('gitalk-container')
 		}
 	}
 </script>
