@@ -24,11 +24,12 @@ use Illuminate\Http\Request;
 //fetch posts api.
 Route::get('/posts/archives','PostController@archives');
 Route::get('/posts/tags','PostController@tags');
-Route::get('/posts','PostController@index');
+Route::get('/posts','PostController@posts');
+Route::get('/post','PostController@post');
 
 
 
-
+Route::get('/comments','CommentController@index');
 
 
 //check user's existence.
@@ -79,6 +80,7 @@ Route::middleware(['refresh.token'])->group(function($router) {
 
     //comment
     $router->post('comment/store','CommentController@store');
+    $router->post('comment/toggleLike','CommentController@toggleLike');
 
 
     //blog

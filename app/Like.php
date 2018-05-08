@@ -10,6 +10,7 @@ class Like extends Model
         'user_id','likable_id','likable_type'
     ];
 
+
     public function user(){
     	return $this->belongsTo(User::class);
     }

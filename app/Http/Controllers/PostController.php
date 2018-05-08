@@ -51,37 +51,13 @@ class PostController extends Controller
         }
     }
 
-    public function index(){
-        //sleep(1);
-    	if (($postId = request()->input('postId')) != null){
+    public function post(){
+        if (($postId = request()->input('post_id')) != null){
             $post = Post::with(['user:name,id','tags:name'])
                             ->whereHas('user',function($q){
                                 $q->where('name',request()->input('userName'));
                             })
                             ->findOrFail($postId);
-
-            //fetch comments
-            $comments = $post->comments()
-                                ->with('user:name,id')
-                                ->withCount('likes')
-                                ->withCount('replies')
-                                ->get();
-            //fetch likes
-            $likes = [];
-            $user = Auth::user();
-            foreach($comments as $comment){
-                if ($user){
-                    if ($comment->likes()
-                                ->where('user_id',$user->id)
-                                ->exists())
-                        array_push($likes,true);
-                    else
-                        array_push($likes,false);
-                }
-                else{
-                    array_push($likes,false);
-                }
-            }
 
             if (Auth::user() && Auth::user()->id == $post->user->id){
                 $prev = $post->user->posts()
@@ -91,12 +67,11 @@ class PostController extends Controller
                 $next = $post->user->posts()
                                     ->where('id','>',$post->id)
                                     ->first();
-                return ['prev' => $prev, 'cur' => $post, 'next' => $next, 'comments' => $comments,
-                        'likes' => $likes];
+                return ['prev' => $prev, 'cur' => $post, 'next' => $next];
             }
             else{
                 if (!$post->posted){
-                    return ['prev' => null, 'cur' => null, 'next' => null, 'comments' => null, 'likes' => null];
+                    return ['prev' => null, 'cur' => null, 'next' => null];
                 }
                 $prev = $post->user->posts()
                                     ->where('posted',true)
@@ -107,26 +82,28 @@ class PostController extends Controller
                                     ->where('posted',true)
                                     ->where('id','>',$post->id)
                                     ->first();
-                return ['prev' => $prev, 'cur' => $post, 'next' => $next, 'comments' => $comments,
-                        'likes' => $likes];
+                return ['prev' => $prev, 'cur' => $post, 'next' => $next];
             }
-    	}
-    	else{
-            $posts = Post::latest();
-            if ($request = request(['month','year','tag','userName'])){
-                $posts->filter($request);
-            }
-            if (!$this->isAdmin($this->user()))
-                $posts = $posts->where('posted',true);
-            $pagination = request('pagination');
-            if ($pagination == 'false'){
-                return $posts->with('tags:name')->get();
-            }
-            else{
-                return $posts->with('tags:name')->paginate($pagination);
-            }
+        }
+        return ['prev' => null, 'cur' => null, 'next' => null];
+    }
+    public function posts(){
+        //sleep(1);
+        $posts = Post::latest();
+        if ($request = request(['month','year','tag','userName'])){
+            $posts->filter($request);
+        }
+        if (!$this->isAdmin($this->user()))
+            $posts = $posts->where('posted',true);
+        $pagination = request('pagination');
+        if ($pagination == 'false'){
+            return $posts->with('tags:name')->get();
+        }
+        else{
+            return $posts->with('tags:name')->paginate($pagination);
+        }
 
-    	}
+    	
     }
 
 

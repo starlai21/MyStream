@@ -38,6 +38,10 @@ window.axios.interceptors.response.use(
                 case 401:
                     store.commit('logout');
                    	console.log('token expired');
+                    // Swal({
+                    //     type: 'error',
+                    //     title: 'The token is expired, please log in again.'
+                    // });
                     break
                 // 如果响应中的 http code 为 400，那么就弹出一条错误提示给用户
                 case 400:

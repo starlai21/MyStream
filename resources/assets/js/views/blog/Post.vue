@@ -64,7 +64,8 @@
 						  	</div>
 						  </div>
 						</nav>
-						<hr>
+						<hr v-if="next||prev">
+						<!-- comments begin -->
 						<div id="comments">
 							<article class="media" v-for="(comment, index) in comments">
 							  <figure class="media-left is-hidden-mobile">
@@ -75,28 +76,101 @@
 							  <div class="media-content">
 							    <div class="content">
 							      <p>
+							      	<!-- user name -->
 							        <strong class="is-capitalized">
 							        	{{comment.user.name}}
 							        </strong>
 							        <span v-if="comment.user.name === userName" class="tag is-primary">author</span>
 							        &nbsp 
+							        <!-- created_at -->
 							         <span class="has-text-grey">
 							         	{{comment.created_at | postAgo}}
 							         </span>
 							        <br>
-							        {{comment.content}}
-							        <br>
+							        <!-- comment content -->
+							        <vue-markdown v-highlight :source="comment.content"></vue-markdown>
 							        <small>
-							        	<a><i v-if="likes[index]" class="fa fa-thumbs-up" style="font-size:18px;"></i>
+							        	<!-- like button -->
+							        	<a @click="toggleLike(comment.id,index)"><i v-if="likes[index]" class="fa fa-thumbs-up" style="font-size:18px;"></i>
 							        		<i v-else class="fa fa-thumbs-o-up" style="font-size:18px;"></i>
 							        	{{comment.likes_count | formatLikes}}
 							        	</a> · 
-							        	<a>Reply{{comment.replies_count| formatReplies}}</a>
+							        	<!-- reply -->
+							        	<a @click="handleReply(comment.id, index, comment.replies_count)">Reply{{comment.replies_count| formatReplies}}</a>
 							        </small>
 							      </p>
-							    </div>							
+							    </div>
+
+							    <!-- replies -->
+						        <article class="media">
+							      <figure class="media-left is-hidden-mobile">
+							        <p class="image is-48x48">
+							          <img class="is-circular" src="https://bulma.io/images/placeholders/96x96.png">
+							        </p>
+							      </figure>
+								    <div class="media-content">
+								        <div class="content">
+								          <p>
+								            <strong>Sean Brown</strong> &nbsp<span class="has-text-grey"> in 2 hrs</span>
+								            <br>
+								            Donec sollicitudin urna eget eros malesuada sagittis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam blandit nisl a nulla sagittis, a lobortis leo feugiat.
+								            <br>
+								            <small><a>Like</a> · <a>Reply</a></small>
+								          </p>
+								        </div>
+								    </div>
+								</article>
+								<!-- replies info & make a reply button -->
+						        <article class="media">
+								    <div class="media-content">
+								        <div class="content"> 	
+											There are 3 more replies, <a>click to view</a>
+								        </div>
+								    </div>
+								    <div class="media-right">
+								    	<div v-show="isLogined">
+									  		<button  class="button" >Make a reply</button>
+										</div>
+									  <div v-show="!isLogined">
+									  	<router-link :to="{name:'register', query: {redirect: $route.fullPath}}">create an account </router-link>
+									  </div>
+									</div>
+								</article>
+
+<!-- 								<article class="media" id="postComment" v-if="isLogined &&" >
+								  <figure class="media-left is-hidden-mobile">
+								    <p class="image is-64x64">
+								      <img class="is-circular" src="https://unsplash.it/64/64?random">
+								    </p>
+								  </figure>
+								  <div class="media-content">
+								    <div class="field">
+								      <p class="control">
+								        <textarea class="textarea" v-model="comment_content" placeholder="Add a comment..."></textarea>
+								      </p>
+								    </div>
+								    <div class="field">
+								      <p class="control">
+								        <button class="button" @click.prevent="postNewComment" :disabled="!comment_content">Post comment</button>
+								      </p>
+								    </div>
+								  </div>
+								</article> -->
+
+
+																
+
+
+
 							  </div>
+							  
 							</article>
+							<!-- pagination -->
+							<div v-show="comments.length > 0">
+								<hr>
+									<pagination @go="fetchComments" :pagination="pagination" v-show="!isLoading"></pagination>
+								<hr>
+							</div>
 						
 							<article class="media" id="postComment" v-if="isLogined">
 							  <figure class="media-left is-hidden-mobile">
@@ -118,16 +192,17 @@
 							  </div>
 							</article>
 							<article class="media" v-else>
-							Please&nbsp
-								<router-link :to="{name:'login', query: {redirect: this.$route.fullPath}}">log in
-								</router-link> &nbsp or &nbsp
-								<router-link :to="{name:'register', query: {redirect: this.$route.fullPath}}">create an account
-								</router-link>&nbsp to participate in this conversation.
+								<div class="media-content">
+									<div class="content">
+							Please<router-link :to="{name:'login', query: {redirect: $route.fullPath}}"> log in </router-link>or
+								<router-link :to="{name:'register', query: {redirect: $route.fullPath}}">create an account </router-link>to participate in this conversation.
+									</div>
+							</div>
 							</article>
 
 						</div>
 
-						<div id="gitalk-container"></div>
+						
 					</div>
 				</div>
 				<div class="column is-3 is-offset-1 is-hidden-mobile" v-show="!isLoading">
@@ -163,6 +238,7 @@ import VueMarkdown from 'vue-markdown';
 import BackToTop from 'vue-backtotop';
 import Header from './Header';
 import {mapState} from 'vuex';
+import Pagination from '../components/Pagination';
 
 	export default {
 		props:['postId','userName'],
@@ -175,7 +251,8 @@ import {mapState} from 'vuex';
 				content: '',
 				comments: [],
 				likes: [],
-				comment_content: ''
+				comment_content: '',
+				pagination: {}
 			};
 		},
 		computed: mapState({
@@ -183,7 +260,6 @@ import {mapState} from 'vuex';
     	}),
 		filters:{
 			postOn(created_at){
-              // return moment(post.created_at).fromNow();
             	return moment(created_at).format("MMMM D, YYYY");
         	},
 
@@ -202,12 +278,59 @@ import {mapState} from 'vuex';
         	}
 		},
 		methods:{
+			handleReply(comment_id, index, replies_count){
+				if (replies_count === 0){
+					//open reply div
+				}
+				else {
+					//fetch replies of this comment
+					//open reply div
+				}
+			},
+			toggleLike(comment_id, index){
+				if (this.isLogined){
+					axios.post("/api/comment/toggleLike",{comment_id: comment_id})
+							.then(r => {
+								var state = this.likes[index];
+								Vue.set(this.likes, index, !state);
+								var comment = this.comments[index];
+								if (state){
+									comment.likes_count--;
+									Vue.set(this.comments, index, comment);
+								}
+								else{
+									comment.likes_count++;
+									Vue.set(this.comments, index, comment);
+								}
+							})
+							.catch(e => {
+								console.log(e);
+							})
+				}
+				else {
+					Swal({
+						type: 'error',
+						title: 'Please log in first!'
+					});
+				}
+			},
+		  	setPagination(data){
+		  	  let pagination = {
+		  	          current_page: data.current_page,
+		  	          last_page: data.last_page,
+		  	          last_page_url: data.last_page_url, 
+		  	          next_page_url: data.next_page_url,
+		  	          prev_page_url: data.prev_page_url,
+		  	          path:data.path
+		  	      };
+		  	  this.pagination = pagination;
+		  	},
 			postNewComment(){
 				axios.post("/api/comment/store",{content: this.comment_content, post_id: this.post.id})
 						.then(response => {
 							if (response.data.status === 'success'){
-								// this.update();
-								Vue.set(this.comments, this.comments.length, response.data.comment);
+								this.fetchComments(this.pagination.last_page_url);
+								// Vue.set(this.comments, this.comments.length, response.data.comment);
 								this.comment_content = '';
 							}
 	                    	Swal({
@@ -225,6 +348,18 @@ import {mapState} from 'vuex';
 	                    	});
 						});
 			},
+			fetchComments(pageUrl){
+				this.isLoading = true;
+				Post.fetchComments(data => {
+					this.isLoading = false;
+					this.comments = data.comments.data;
+					this.likes = data.likes;
+					this.setPagination(data.comments);
+				},error => {
+					this.isLoading = false;
+					console.log(error);
+				},pageUrl, {post_id: this.postId});
+			},
 			update(){
 				if (this.postId){
 					$('#table').html('');
@@ -235,13 +370,13 @@ import {mapState} from 'vuex';
 						this.prev = data.prev;
 						this.next = data.next;
 						this.isLoading = false;
-						this.comments = data.comments;
-						this.likes = data.likes;
 					},error => {
 		              this.isLoading = false;
 		              console.log(error);
 		              this.$router.push({name:'blog_home', params: {userName: this.userName}});
-		            },{postId: this.postId, userName: this.userName});
+		            },{post_id: this.postId, userName: this.userName});
+
+		            this.fetchComments(null);
 				}
 			},
 			processAnchors(){
@@ -303,7 +438,8 @@ import {mapState} from 'vuex';
 			'tag':Tag,
 			VueMarkdown,
 			BackToTop,
-			'blog-header': Header
+			'blog-header': Header,
+			'pagination': Pagination
 		},
 		watch:{
 			'postId':'update'

@@ -13,6 +13,23 @@ export default class Post{
                  });
 	}
 
+	static fetchComments(then,_catch,pageUrl,params){
+		pageUrl = pageUrl || '/api/comments';
+		axios.get(pageUrl,{params:params})
+                 .then(({data}) => then(data))
+                 .catch(error => {
+                 	_catch(error);
+                 	Swal({
+		                type: 'error',
+		                title: 'Oops...',
+		                text: 'Failed to fetch comments.'
+		              });
+                 });
+	}
+
+
+
+
 	static archives(then,params){
 		axios.get('/api/posts/archives',{params:params})
 				.then(({data}) => then(data))
@@ -26,7 +43,7 @@ export default class Post{
 	}
 
 	static fetchPost(then,_catch,params){
-		axios.get('/api/posts',{params:params})
+		axios.get('/api/post',{params:params})
 				.then(({data}) => then(data))
 				.catch(error => {
 					_catch(error);
