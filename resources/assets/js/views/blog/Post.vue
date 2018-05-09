@@ -96,7 +96,7 @@
 							        	{{comment.likes_count | formatLikes}}
 							        	</a> · 
 							        	<!-- reply -->
-							        	<a v-if="comment.replies_count === 0" @click="makeReply(index,$event)"><i class="fa fa-comment-o" style="font-size:18px"></i></i></a>
+							        	<a v-if="comment.replies_count === 0" @click="makeReply(index,null,$event)"><i class="fa fa-comment-o" style="font-size:18px"></i></i></a>
 							        	<a v-else @click="toggleReplies(index,comment.id)">
 							        		<template v-if="comment.toggle">
 							        			Collapse replies
