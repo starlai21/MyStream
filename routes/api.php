@@ -32,6 +32,7 @@ Route::get('/post','PostController@post');
 Route::get('/comments','CommentController@index');
 
 
+
 //check user's existence.
 Route::get('/blog','BlogController@index');
 
@@ -80,7 +81,15 @@ Route::middleware(['refresh.token'])->group(function($router) {
 
     //comment
     $router->post('comment/store','CommentController@store');
+    $router->post('reply/store','CommentController@storeReply');
+
     $router->post('comment/toggleLike','CommentController@toggleLike');
+
+    $router->post('reply/toggleLike','CommentController@toggleLike');
+
+
+
+
 
 
     //blog
