@@ -21,10 +21,10 @@ class CommentController extends Controller
         $post = Post::find(request()->input('post_id'));
         $comments = $post->comments()
                             ->with(['replies' => function ($q){
-                                $q->with('user:name,id')
+                                $q->with('user:name,id,avatar_url')
                                     ->withCount('likes');
                             }])
-                            ->with('user:name,id')
+                            ->with('user:name,id,avatar_url')
                             ->withCount('likes')
                             ->withCount('replies')
                             ->paginate(8);

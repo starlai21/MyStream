@@ -26,7 +26,8 @@ class AuthController extends Controller
         $params['activation_code'] = str_random(30).time();
         $params['password'] = Hash::make($params['password']);
 
-        $user = User::create(['name' => $params['name']]);
+        $user = User::create(['name' => $params['name'],
+                              'avatar_url' => asset('images/default_avatar.jpg')]);
 
         $new_params = array_filter($params, function ($key) {
             return $key !== 'name';
@@ -53,7 +54,7 @@ class AuthController extends Controller
         $emailLoginUser->save();
         $token = auth()->login($user);
         return ['token' => 'Bearer ' . $token,
-                'userName' => $user->name,
+                'user' => $user,
                 'status' => 'success',
                 'message' => 'Activated'];
 
@@ -125,7 +126,7 @@ class AuthController extends Controller
                 $user = $emailLoginUser->user;
                 $token = auth()->login($user);
                 return response(['token'     => 'Bearer ' . $token,
-                                'userName'  => $user->name,
+                                'user'  => $user,
                                 'status'  => 'success'], 201);
             }
         }
@@ -199,7 +200,7 @@ class AuthController extends Controller
             $token = auth()->login($user);
             return ['token' => 'Bearer ' . $token,
                             'status' => 'success',
-                            'userName' => $user->name,
+                            'user' => $user,
                             'access_token' =>  $res['access_token'],
                             'status' => 'registered'];
         }
@@ -210,10 +211,6 @@ class AuthController extends Controller
 
     }
 
-
-    public function authLogin(){
-
-    }
 
     public function authRegister(){
         $params = request()->validate(
@@ -238,14 +235,17 @@ class AuthController extends Controller
             }
             else{
                 //it is a register request.
-                $user = User::create(['name' => $params['name']]);
+                $user = User::create(['name' => $params['name'],
+                                      'avatar_url' => $body->avatar_url]);
+                
                 $socialLoginUser = SocialLoginUser::create(['provider_user_id' => $body->id,
                                                             'user_id' => $user->id]); 
                 Blog::create(['user_id' => $user->id, 'name' => $user->name]);
                 $token = auth()->login($user);
                 return ['token' => 'Bearer ' . $token,
                             'status' => 'success',
-                            'message' => 'Congrats! Your blog has been successfully created.'];
+                            'message' => 'Congrats! Your blog has been successfully created.',
+                            'user' => $user];
 
             }
 

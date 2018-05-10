@@ -48,8 +48,8 @@ import {mapState} from 'vuex';
 			'blog-header': Header
 		},
     	computed: mapState({
-    		userName: state => state.tempUserName,
-    		loginedUserName: state => state.userName,
+    		userName: state => state.tempUser.name,
+    		loginedUserName: state => state.user.name,
     		blog: state => state.blog
     	}),
 	}

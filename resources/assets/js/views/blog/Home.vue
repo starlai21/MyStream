@@ -87,7 +87,7 @@ import {mapState} from 'vuex';
         'blog-header': Header
       },
     computed: mapState({
-      userName: state => state.tempUserName,
+      userName: state => state.tempUser.name,
       blog: state => state.blog
      }),
     watch:{

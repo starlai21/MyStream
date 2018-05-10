@@ -70,7 +70,7 @@
 							<article class="media" v-for="(comment, index) in comments">
 							  <figure class="media-left is-hidden-mobile">
 								  	<p class="image is-64x64">
-								      <img class="is-circular" src="https://unsplash.it/64/64?random">
+								      <img class="is-circular" :src="comment.user.avatar_url">
 								    </p>
 							  </figure>
 							  <div class="media-content">
@@ -116,7 +116,7 @@
 										<article class="media"  v-if="selectedCommentIndex === index" >
 										  <figure class="media-left is-hidden-mobile">
 										    <p class="image is-64x64">
-										      <img class="is-circular" src="https://unsplash.it/64/64?random">
+										      <img class="is-circular" :src="user.avatar_url">
 										    </p>
 										  </figure>
 										  <div class="media-content">
@@ -143,7 +143,7 @@
 						        	<article class="media" v-for="(reply, replyIndex) in comment.replies.slice(0,show_replies)" :key="reply.id">
 								      <figure class="media-left is-hidden-mobile">
 								        <p class="image is-48x48">
-								          <img class="is-circular" src="https://unsplash.it/64/64?random">
+								          <img class="is-circular" :src="reply.user.avatar_url">
 								        </p>
 								      </figure>
 									    <div class="media-content">
@@ -167,7 +167,7 @@
 						        	<article class="media" v-if="comment.loadMore" v-for="(reply, replyIndex) in comment.replies.slice(show_replies)" :key="reply.id">
 								      <figure class="media-left is-hidden-mobile">
 								        <p class="image is-48x48">
-								          <img class="is-circular" src="https://unsplash.it/64/64?random">
+								          <img class="is-circular" :src="reply.user.avatar_url">
 								        </p>
 								      </figure>
 									    <div class="media-content">
@@ -210,7 +210,7 @@
 										<article class="media" key="replyArea" v-if="selectedCommentIndex === index" >
 										  <figure class="media-left is-hidden-mobile">
 										    <p class="image is-64x64">
-										      <img class="is-circular" src="https://unsplash.it/64/64?random">
+										      <img class="is-circular" :src="user.avatar_url">
 										    </p>
 										  </figure>
 										  <div class="media-content">
@@ -246,7 +246,7 @@
 							<article class="media" id="postComment" v-if="isLogined">
 							  <figure class="media-left is-hidden-mobile">
 							    <p class="image is-64x64">
-							      <img class="is-circular" src="https://unsplash.it/64/64?random">
+							      <img class="is-circular" :src="user.avatar_url">
 							    </p>
 							  </figure>
 							  <div class="media-content">
@@ -335,7 +335,8 @@ import Pagination from '../components/Pagination';
 			};
 		},
 		computed: mapState({
-    		isLogined: state => state.isLogined
+    		isLogined: state => state.isLogined,
+    		user: state => state.user
     	}),
 		filters:{
 			postOn(created_at){

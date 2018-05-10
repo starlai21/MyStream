@@ -133,7 +133,7 @@ import {mapState} from 'vuex';
 			PostEdit
 		},
     	computed: mapState({
-    		userName: state => state.userName,
+    		userName: state => state.user.name,
     		blog: state => state.blog
     	}),
 		mixins: [PostsMixin],

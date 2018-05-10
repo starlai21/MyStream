@@ -184,7 +184,7 @@ import { Validator } from 'vee-validate';
                       if (response.data.status === 'success'){
                         // this.$auth.logout();
                         var redirectUrl = this.$route.query.redirect;
-                        this.$store.dispatch('logined',{token: response.data.token, userName: this.userName});
+                        this.$store.dispatch('logined',{token: response.data.token, user: response.data.user});
                         if (redirectUrl)
                           this.$router.push(redirectUrl);
                       }

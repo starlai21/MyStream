@@ -19,7 +19,7 @@
 
 <style>
 #footer{
-  height: 30%;
+  height: 35%;
   overflow: auto;
   margin: auto;
   position: absolute;

@@ -87,7 +87,7 @@ p.subtitle {
                       .then(response => {
                         if (response.data.status === 'success'){
                           var redirectUrl = this.$route.query.redirect;
-                          this.$store.dispatch('logined',{token: response.data.token,userName: response.data.userName});
+                          this.$store.dispatch('logined',{token: response.data.token,user: response.data.user});
 
                           if (redirectUrl)
                             this.$router.push(redirectUrl);
@@ -114,7 +114,7 @@ p.subtitle {
           if (response.data.status === 'registered'){
             var redirectUrl = this.$route.query.redirect;
             this.$auth.logout();
-            this.$store.dispatch('logined',{token: response.data.token,userName: response.data.userName});
+            this.$store.dispatch('logined',{token: response.data.token,user: response.data.user});
 
             if (redirectUrl)
               this.$router.push(redirectUrl);

@@ -37,6 +37,7 @@ class BlogController extends Controller
 	    }
 	    $user = User::where('name',$userName)->first();
 	    return ['status' => 'success',
-				'blog'	=>	$user->blog];
+				'blog'	=>	$user->blog,
+                'user' => $user];
     }
 }

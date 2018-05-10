@@ -8,8 +8,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         token: null,
-        userName: null,
-        tempUserName: null,
+        user: null,
+        tempUser: null,
         blog: null,
         notify: 0,
         isLogined: false
@@ -21,34 +21,35 @@ export default new Vuex.Store({
             state.notify++;
         },
 
-        [types.NAMECHECKED]: (state, {userName, blog}) => {
-            state.tempUserName = userName;
+        [types.NAMECHECKED]: (state, {tempUser, blog}) => {
+            state.tempUser = tempUser;
             state.blog = blog;
         },
 
         [types.LOGINED]: (state,token) => {
             state.token = token;
-            state.userName = localStorage.userName;
+            state.user = JSON.parse(localStorage.user);
             state.isLogined = true;
         },
 
-        [types.LOGIN]: (state, {token, userName}) => {
+        [types.LOGIN]: (state, {token, user}) => {
             localStorage.token = token;
-            localStorage.userName = userName;
+            localStorage.user = JSON.stringify(user);
             state.token = token;
-            state.userName = userName;
+            state.user = user;
             state.isLogined = true;
             let params = {};
-            params['userName'] = userName;
+            params['userName'] = user.name;
             router.push({name:'posts_manage', params: params});
 
         },
         [types.LOGOUT]: (state) => {
             router.push({name:'login'});
             localStorage.removeItem('token');
-            localStorage.removeItem('userName');
+            localStorage.removeItem('user');
             state.token = null;
             state.isLogined = false;
+            state.user = null;
 
         },
         [types.REFRESH_TOKEN]: (state, data) => {
@@ -76,9 +77,9 @@ export default new Vuex.Store({
             })
         },
 
-        logined({commit},{token,userName}){
+        logined({commit},{token,user}){
             return new Promise((resolve,reject) => {
-                commit(types.LOGIN,{token,userName});
+                commit(types.LOGIN,{token,user});
                 Vue.toasted.show("Welcome back~", { 
                      theme: "primary", 
                      position: "bottom-center", 
@@ -89,8 +90,8 @@ export default new Vuex.Store({
         refreshToken({commit},token){
             commit(types.REFRESH_TOKEN,token);
         },
-        nameChecked({commit},{userName,blog}){
-            commit(types.NAMECHECKED,{userName,blog});
+        nameChecked({commit},{tempUser,blog}){
+            commit(types.NAMECHECKED,{tempUser,blog});
         }
     }
 })

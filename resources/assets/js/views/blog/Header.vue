@@ -9,7 +9,7 @@
         <div class="media">
           <div class="media-left">
             <figure class="image is-48x48">
-               <img :src="'/images/avatar.jpg'" alt="Placeholder image">
+               <img  :src="'/images/avatar.jpg'" alt="Placeholder image">
             </figure>
           </div>
           <div class="media-content has-text-black">
@@ -33,7 +33,7 @@
       <div class="container">
         <div class="navbar-brand">
           <a class="navbar-item" @click="isAboutOpen = !isAboutOpen">
-            <h1 class= "title is-6">{{userName}}</h1>
+            <h1 class= "title is-6">{{user.name}}</h1>
           </a>
           <span class="navbar-burger burger" data-target="navbarMenuHeroC" @click="navToggle">
             <span></span>
@@ -45,7 +45,7 @@
           <div class="navbar-end">
 
 
-            <router-link v-if="token" :to="{ name: 'posts_manage', params: { userName: loginedUserName }}" class="navbar-item" @click.native="isNavOpen && navToggle()">
+            <router-link v-if="token" :to="{ name: 'posts_manage', params: { userName: loginedUser.name }}" class="navbar-item" @click.native="isNavOpen && navToggle()">
                <span>Manage Blog</span>
             </router-link>
             <router-link v-else :to="{ name: 'login' , query: {redirect: $route.fullPath}}" class="navbar-item" @click.native="isNavOpen && navToggle()">
@@ -112,13 +112,11 @@
 </template>
 
 <style type="text/css">
-  .has-bg-img { 
-    background: url('/images/avatar.jpg') center center; 
-    background-size: cover; 
-  }
+
   h2.subtitle {
     padding-top: 0.5rem;
   }
+
 
 </style>
 
@@ -141,8 +139,8 @@ import {mapState} from 'vuex';
     },
     computed: mapState({
       token: state => state.token,
-      loginedUserName: state => state.userName,
-      userName: state => state.tempUserName,
+      loginedUser: state => state.user,
+      user: state => state.tempUser,
       blog: state => state.blog
    	 })
 	}

@@ -116,7 +116,7 @@ import {mapState} from 'vuex';
       '$store.state.notify': 'updateAll'
     },
     computed: mapState({
-      userName: state => state.tempUserName,
+      userName: state => state.tempUser.name,
       blog: state => state.blog
      })
   }

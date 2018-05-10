@@ -5,13 +5,13 @@ import store from './store/store';
 
 function checkUser(userName,next){
  
-    if (store.state.tempUserName && store.state.tempUserName === userName){
+    if (store.state.tempUser && store.state.tempUser.name === userName){
         next();
     }
     else{
         axios.get('/api/blog',{params:{'userName':userName}})
                 .then(({data}) => {
-                    store.dispatch('nameChecked',{userName: userName,blog: data.blog});
+                    store.dispatch('nameChecked',{tempUser: data.user,blog: data.blog});
                     next();
                 })
                 .catch(e => {
@@ -58,7 +58,7 @@ let routes = [
                                 if (response.data.status === 'success'){
                                     store.dispatch('logined', {
                                         token: response.data.token,
-                                        userName: response.data.userName
+                                        user: response.data.user
                                     });
                                 }
                                 else{
@@ -166,7 +166,7 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(r => r.meta.requireAuth)) {
         if (store.state.token) {
             if (to.matched.some(r => r.meta.requireCheck)){
-                if (to.params.userName !== store.state.userName)
+                if (to.params.userName !== store.state.user.name)
                     next({name:'error'});
                 else
                     checkUser(to.params.userName,next);
