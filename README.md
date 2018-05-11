@@ -19,7 +19,7 @@
 - [x] Present previous post & next post
 - [x] Support uploading images
 - [x] OAuth 2.0 (github)
-- [ ] Support comments
+- [x] Support comments
 - [ ] Support customized user profile
 
 

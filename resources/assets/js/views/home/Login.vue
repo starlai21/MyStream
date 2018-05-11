@@ -89,8 +89,9 @@ p.subtitle {
                           var redirectUrl = this.$route.query.redirect;
                           this.$store.dispatch('logined',{token: response.data.token,user: response.data.user});
 
-                          if (redirectUrl)
+                          if (redirectUrl){
                             this.$router.push(redirectUrl);
+                          }
                         } 
                         else{
                           Swal({
