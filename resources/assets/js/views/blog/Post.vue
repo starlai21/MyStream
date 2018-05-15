@@ -524,7 +524,6 @@ import Pagination from '../components/Pagination';
 			},
 			processAnchors(){
 
-				console.log("?");
 				$("#table li a[href^='#']").on('click', (e) => {
 					e.preventDefault();
 					var $id = $($(e.target).attr('href'));

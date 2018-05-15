@@ -37,6 +37,8 @@ export default new Vuex.Store({
             localStorage.user = JSON.stringify(user);
             state.token = token;
             state.user = user;
+            state.tempUser = user;
+            state.blog = user.blog;
             state.isLogined = true;
             let params = {};
             params['userName'] = user.name;

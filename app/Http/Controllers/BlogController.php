@@ -35,9 +35,8 @@ class BlogController extends Controller
 		if (!User::exists($userName) || !User::activated($userName)) {
 			abort(404);
 	    }
-	    $user = User::where('name',$userName)->first();
+	    $user = User::where('name',$userName)->with('blog')->first();
 	    return ['status' => 'success',
-				'blog'	=>	$user->blog,
                 'user' => $user];
     }
 }

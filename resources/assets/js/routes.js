@@ -4,14 +4,14 @@ import store from './store/store';
 
 
 function checkUser(userName,next){
- 
+
     if (store.state.tempUser && store.state.tempUser.name === userName){
         next();
     }
     else{
         axios.get('/api/blog',{params:{'userName':userName}})
                 .then(({data}) => {
-                    store.dispatch('nameChecked',{tempUser: data.user,blog: data.blog});
+                    store.dispatch('nameChecked',{tempUser: data.user,blog: data.user.blog});
                     next();
                 })
                 .catch(e => {

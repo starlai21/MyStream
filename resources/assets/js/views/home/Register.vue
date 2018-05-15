@@ -182,7 +182,7 @@ import { Validator } from 'vee-validate';
             axios.post('/api/auth/authRegister',{name: this.userName, provider: provider, access_token: this.$auth.getToken()})
                     .then(response => {
                       if (response.data.status === 'success'){
-                        // this.$auth.logout();
+                        this.$auth.logout();
                         var redirectUrl = this.$route.query.redirect;
                         this.$store.dispatch('logined',{token: response.data.token, user: response.data.user});
                         if (redirectUrl)

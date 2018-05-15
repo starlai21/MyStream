@@ -13,7 +13,12 @@
     </div>
  
 </template>
-
+<style type="text/css">
+  .hero .subtitle {
+    padding: 3rem 0;
+    line-height: 1.5;
+  }
+</style>
 <script type="text/javascript">
 
 export default {

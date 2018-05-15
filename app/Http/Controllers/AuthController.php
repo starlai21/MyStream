@@ -51,6 +51,7 @@ class AuthController extends Controller
         $emailLoginUser->activation_code = null;
         $user = $emailLoginUser->user;
         Blog::create(['user_id' => $user->id, 'name' => $user->name]);
+        $user = User::with('blog')->find($user->id);
         $emailLoginUser->save();
         $token = auth()->login($user);
         return ['token' => 'Bearer ' . $token,
@@ -124,6 +125,7 @@ class AuthController extends Controller
             
             if (Hash::check($params['password'],$emailLoginUser->password)){
                 $user = $emailLoginUser->user;
+                $user = User::with('blog')->find($user->id);
                 $token = auth()->login($user);
                 return response(['token'     => 'Bearer ' . $token,
                                 'user'  => $user,
@@ -197,6 +199,7 @@ class AuthController extends Controller
 
         if ($socialLoginUser){
             $user = $socialLoginUser->user;
+            $user = User::with('blog')->find($user->id);
             $token = auth()->login($user);
             return ['token' => 'Bearer ' . $token,
                             'status' => 'success',
@@ -241,6 +244,7 @@ class AuthController extends Controller
                 $socialLoginUser = SocialLoginUser::create(['provider_user_id' => $body->id,
                                                             'user_id' => $user->id]); 
                 Blog::create(['user_id' => $user->id, 'name' => $user->name]);
+                $user = User::with('blog')->find($user->id);
                 $token = auth()->login($user);
                 return ['token' => 'Bearer ' . $token,
                             'status' => 'success',
